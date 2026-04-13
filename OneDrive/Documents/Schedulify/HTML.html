@@ -1,97 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Biodata</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f4f4f9;
-      color: #333;
-    }
-    header {
-      background: #4CAF50;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    section {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      color: #4CAF50;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 5px;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    ul li {
-      margin: 8px 0;
-    }
-    footer {
-      text-align: center;
-      padding: 15px;
-      background: #333;
-      color: white;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify Dashboard</title>
+    <link rel="stylesheet" href="style.dashboard.css">
 </head>
 <body>
-  <header>
-    <h1>My Biodata</h1>
-    <p>Welcome to my personal profile</p>
-  </header>
 
-  <section>
-    <h2>Personal Information</h2>
-    <ul>
-      <li><strong>Name:</strong> Your Name</li>
-      <li><strong>Date of Birth:</strong> DD/MM/YYYY</li>
-      <li><strong>Gender:</strong> Male/Female</li>
-      <li><strong>Nationality:</strong> Your Nationality</li>
-      <li><strong>Address:</strong> Your Address</li>
-    </ul>
-  </section>
+    <div class="main-container">
+        <div class="header">
+            <div class="logo-section">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Schedulify</span>
+            </div>
+        </div>
 
-  <section>
-    <h2>Education</h2>
-    <ul>
-      <li><strong>School:</strong> Example High School</li>
-      <li><strong>College/University:</strong> Example University</li>
-      <li><strong>Degree:</strong> Bachelor of Something</li>
-    </ul>
-  </section>
+        <div class="dashboard-title-box">
+            <h1>Dashboard</h1>
+        </div>
 
-  <section>
-    <h2>Skills</h2>
-    <ul>
-      <li>Skill 1</li>
-      <li>Skill 2</li>
-      <li>Skill 3</li>
-    </ul>
-  </section>
+        <div class="button-grid">
+            <button class="btn">View Availability</button>
+            <button class="btn">Appointment</button>
+            <button class="btn">Appointment History</button>
+            
+            <button class="btn">Notification Reminder</button>
+            <button class="btn">Appointment Cancellation</button>
+            <button class="btn">Feedback</button>
+            
+            <div class="profile-container">
+                <button class="btn">Profile</button>
+            </div>
+        </div>
+    </div>
 
-  <section>
-    <h2>Contact</h2>
-    <ul>
-      <li><strong>Email:</strong> yourname@example.com</li>
-      <li><strong>Phone:</strong> +123456789</li>
-    </ul>
-  </section>
-
-  <footer>
-    <p>&copy; 2026 Your Name. All rights reserved.</p>
-  </footer>
 </body>
 </html>

@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #1a4a8d; /* Warna latar belakang luar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-container {
+    background: radial-gradient(circle, #3b82f6, #1d4ed8); /* Efek gradien biru */
+    width: 90%;
+    max-width: 1000px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    text-align: center;
+    position: relative;
+}
+
+/* Logo Schedulify */
+.header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.logo-icon {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #00008b;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* Kotak Tajuk Dashboard */
+.dashboard-title-box {
+    background-color: #94a3b8; /* Warna kelabu kebiruan */
+    display: inline-block;
+    padding: 15px 60px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.dashboard-title-box h1 {
+    font-size: 2.5rem;
+    color: #000;
+}
+
+/* Susunan Butang */
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+}
+
+.btn {
+    background-color: #1e1e2d; /* Warna butang gelap */
+    color: white;
+    border: none;
+    width: 250px;
+    height: 90px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: #2d2d3f;
+    transform: translateY(-3px);
+}
+
+/* Profile Butang (Baris Bawah) */
+.profile-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+}
