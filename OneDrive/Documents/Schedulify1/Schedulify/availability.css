@@ -1,0 +1,140 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-image: url('background.png');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: 200px;
+    background-color: white;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #000;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.nav-menu {
+    flex-grow: 1; /* Mengambil ruang tengah */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Memusatkan butang secara vertical */
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #333;
+    background-color: #bdccc5;
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: bold;
+    width: 100%;
+    max-width: 170px;
+    transition: background 0.3s;
+}
+
+.nav-item.active {
+    background-color: #536d72;
+    color: #000;
+}
+
+.nav-item:hover {
+    filter: brightness(0.95);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.page-title {
+    color: white;
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Calendar Styling */
+.calendar-card {
+    background-color: #e6f7f8;
+    border-radius: 40px;
+    padding: 30px;
+    flex: 1;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.month-title {
+    text-align: center;
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+    text-align: center;
+}
+
+.day-label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.date-cell {
+    background-color: #a4bad1;
+    height: 85px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.date-cell:hover {
+    transform: scale(1.02);
+    background-color: #93abc3;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    color: white;
+    font-size: 0.8rem;
+    padding-bottom: 10px;
+}
