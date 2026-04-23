@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+    <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+    <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+    <button onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+    <button onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+    <button class="active" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+<button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+</nav>
+    </header>
+
+    <main class="content-container">
+        <div id="feedback-form-container">
+            <h1 class="main-title">Feedback</h1>
+            <p class="subtitle">Help us make Schedulify better!</p>
+
+            <div class="card feedback-card">
+                <div class="rating-container">
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="bad">
+                        <span>😡 (Bad)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="normal">
+                        <span>😐 (Good)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="good">
+                        <span>😊 (So good)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="amazing">
+                        <span>😻 (Very Amazing)</span>
+                    </label>
+                </div>
+
+                <div class="input-section">
+                    <div class="category-list">
+                        <p class="label-text">Example of what you want to say</p>
+                        <ul>
+                            <li>[ Bug/Error ]</li>
+                            <li>[ Design/UI ]</li>
+                            <li>[ Suggestion ]</li>
+                            <li>[ Others ]</li>
+                        </ul>
+                    </div>
+                    <div class="text-area-wrapper">
+                        <textarea id="feedback-text" placeholder="give reason here"></textarea>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-cancel" onclick="resetForm()">Cancel</button>
+                    <button class="btn-done" onclick="location.href='{{ url_for('book') }}'">Done</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-container" style="display: none;">
+            <div class="card success-card">
+                <h1 class="success-title">Thank you for your feedback! 🚀</h1>
+                <p class="success-text">
+                    We appreciate your help in making Schedulify the best scheduling tool for our campus. 
+                    Our team will look into it!
+                </p>
+                <div class="done-wrapper">
+                    <button class="btn-done" onclick="location.href='book.html'">Done</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function resetForm() {
+            // Reset radio buttons
+            const radios = document.getElementsByName('rating');
+            radios.forEach(radio => radio.checked = false);
+            // Reset textarea
+            document.getElementById('feedback-text').value = '';
+        }
+
+        function showSuccess() {
+            document.getElementById('feedback-form-container').style.display = 'none';
+            document.getElementById('success-container').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
