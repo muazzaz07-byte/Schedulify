@@ -1,0 +1,177 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Navbar Styling */
+.navbar {
+    width: 100%;
+    background: white;
+    padding: 40px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    color: #004aad;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.nav-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #555;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.nav-buttons button:hover, .nav-buttons button.active {
+    background: #dcdcdc;
+    transform: translateY(-2px);
+}
+
+/* Notification Badge Icon inside button */
+.dot-icon {
+    height: 12px;
+    width: 12px;
+    background-color: #ffb100;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* Main Content */
+.content {
+    width: 90%;
+    max-width: 1000px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.page-title {
+    color: #43607c;
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+/* Container Box */
+.notification-container {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.notification-list {
+    max-height: 450px; /* Had ketinggian sebelum scroll */
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.notification-list::-webkit-scrollbar {
+    width: 6px;
+}
+.notification-list::-webkit-scrollbar-thumb {
+    background-color: #d1d1d1;
+    border-radius: 10px;
+}
+
+/* Notification Cards */
+.notif-card {
+    background: #f8f9fa;
+    margin-bottom: 15px;
+    padding: 15px 25px;
+    border-radius: 50px; /* Ikuti bentuk dalam gambar */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.notif-card:hover {
+    transform: scale(1.01);
+    background: #fff;
+}
+
+.notif-body {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-align: left;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* Status Dots */
+.status-dot {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.alert { background-color: #ff5c5c; }    /* Merah */
+.update { background-color: #5ce69d; }   /* Hijau */
+.reminder { background-color: #5c8dff; } /* Biru */
+
+.notif-date {
+    background: white;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #777;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    min-width: 100px;
+}
+
+/* Arrow */
+.scroll-arrow {
+    margin-top: 15px;
+    color: #43607c;
+    font-size: 1.2rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-5px);}
+    60% {transform: translateY(-3px);}
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    .notif-card {
+        flex-direction: column;
+        border-radius: 20px;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .notif-date {
+        align-self: flex-end;
+    }
+}

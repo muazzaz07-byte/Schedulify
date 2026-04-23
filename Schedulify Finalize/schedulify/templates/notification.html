@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Notifications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+    <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+    <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+    <button onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+    <button onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+    <button onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+    <button class="active" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+</nav>
+    </header>
+
+    <main class="content">
+        <h1 class="page-title">Notifications</h1>
+
+        <div class="notification-container">
+            <div class="notification-list">
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot alert"></span>
+                        <p>Alert: Mr. Muhammad Hazimin Bin Wahab has cancelled your session on 26/4 due to an emergency.</p>
+                    </div>
+                    <div class="notif-date">23/4/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your appointment with Mrs. Norwahida Syazwani Binti Othman on 20/4 has been confirmed.</p>
+                    </div>
+                    <div class="notif-date">15/4/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot alert"></span>
+                        <p>Alert: Mrs. Norwahida Syazwani Binti Othman has cancelled your session on 12/4 due to an emergency.</p>
+                    </div>
+                    <div class="notif-date">10/4/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot reminder"></span>
+                        <p>Reminder: You have an appointment with Dr. Khairul in 1 hour.</p>
+                    </div>
+                    <div class="notif-date">28/3/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your appointment with Mr. Willie Poh Kaw Lik on 25/3 has been confirmed.</p>
+                    </div>
+                    <div class="notif-date">22/3/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your system update is complete.</p>
+                    </div>
+                    <div class="notif-date">20/3/2026</div>
+                </div>
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your appointment with Mrs. Norwahida Syazwani Binti Othman on 20/4 has been confirmed.</p>
+                    </div>
+                    <div class="notif-date">15/4/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot alert"></span>
+                        <p>Alert: Mrs. Norwahida Syazwani Binti Othman has cancelled your session on 12/4 due to an emergency.</p>
+                    </div>
+                    <div class="notif-date">10/4/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot reminder"></span>
+                        <p>Reminder: You have an appointment with Dr. Khairul in 1 hour.</p>
+                    </div>
+                    <div class="notif-date">28/3/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your appointment with Mr. Willie Poh Kaw Lik on 25/3 has been confirmed.</p>
+                    </div>
+                    <div class="notif-date">22/3/2026</div>
+                </div>
+
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot update"></span>
+                        <p>Your system update is complete.</p>
+                    </div>
+                    <div class="notif-date">20/3/2026</div>
+                </div>
+            </div>
+            
+            <div class="scroll-arrow">▼</div>
+        </div>
+    </main>
+
+</body>
+</html>

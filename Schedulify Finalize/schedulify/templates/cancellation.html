@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Cancellation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cancellation.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+    <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+    <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+    <button class="active" onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+    <button onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+    <button onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+    <button onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+</nav>
+    </header>
+
+<main class="container">
+    <section id="state-1" class="card">
+        <div class="warning-box">
+            <span class="warning-icon">⚠️</span>
+            <p>Please cancel at least <strong>24 hours before</strong> the session to allow other students to book the slot.</p>
+        </div>
+        <hr>
+        
+        <div id="appointment-list-wrapper"></div>
+
+        <hr>
+        <div class="scroll-arrow">
+            <span>▼</span>
+        </div>
+    </section>
+
+    <section id="state-2" class="card hidden">
+        <h2 class="confirm-title">Are you sure you want to cancel?</h2>
+        <div class="reason-container">
+        <textarea class="reason-textarea" placeholder="Reason for cancellation"></textarea>
+        
+        <div class="upload-overlay">
+            <span class="upload-icon">↑</span>
+        </div>
+    </div>
+        <div class="action-buttons">
+            <button class="btn-secondary" onclick="showState(1)">No, Keep It</button>
+            <button class="btn-danger" onclick="confirmDelete()">Confirm cancel now</button>
+        </div>
+    </section>
+
+    <section id="state-3" class="card hidden modal-small">
+        <div class="success-content">
+            <h1>Ops, you have cancelled your appointment</h1>
+            <button class="btn-primary" onclick="showState(1)">Okay</button>
+        </div>
+    </section>
+</main>
+
+    <script>
+        // 1. Data Appointment (Contoh ada 3 appointment)
+let appointments = [
+    { id: 1, name: "Mrs. Norwahida Syazwani Binti Othman", date: "Monday, 13 April 2026", time: "8:00 AM - 8:30 AM", room: "Lecturer Room, Block A (Level 3)" },
+    { id: 2, name: "Dr. Ahmad Zaki", date: "Tuesday, 14 April 2026", time: "10:00 AM - 11:00 AM", room: "Lab 2, Block B" },
+    { id: 3, name: "Ms. Siti Sarah", date: "Wednesday, 15 April 2026", time: "2:00 PM - 3:00 PM", room: "Meeting Room 1" }
+];
+
+let selectedId = null;
+
+// 2. Fungsi untuk render (lukis) senarai ke skrin
+function renderAppointments() {
+    const container = document.getElementById('appointment-list-wrapper');
+    
+    if (appointments.length === 0) {
+        // Jika kosong, tunjuk mesej No Appointment (Gambar 4)
+        container.innerHTML = `<div class="empty-msg"><p>No Appointment for this time</p></div>`;
+        return;
+    }
+
+    // Jika ada data, bina HTML untuk setiap satu
+    let html = "";
+    appointments.forEach(app => {
+        html += `
+            <div class="appointment-item" style="border-bottom: 1px solid #eee; margin-bottom: 10px; padding-bottom: 10px;">
+                <div class="details">
+                    <p class="label">Appointment with</p>
+                    <h3 class="name" style="color: #004aad;">${app.name}</h3>
+                    <p>Date: ${app.date}</p>
+                    <p>${app.room}</p>
+                    <p>Time: ${app.time}</p>
+                </div>
+                <button class="btn-cancel-trigger" onclick="triggerCancel(${app.id})">Cancel Appointment</button>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+// 3. Bila tekan butang Cancel, simpan ID mana nak buang
+// Tambah variable ini di bahagian atas script untuk senang access textarea
+const reasonInput = document.querySelector('.reason-textarea');
+
+// 1. Gantikan fungsi triggerCancel sedia ada
+function triggerCancel(id) {
+    selectedId = id;
+    
+    // RESET: Kosongkan kotak reason setiap kali user tekan butang cancel baru
+    if(reasonInput) {
+        reasonInput.value = ""; 
+    }
+    
+    showState(2); 
+}
+
+// 2. Gantikan fungsi confirmDelete sedia ada
+function confirmDelete() {
+    // Buang data dari array
+    appointments = appointments.filter(app => app.id !== selectedId);
+    
+    // RESET: Kosongkan juga di sini supaya bila masuk balik, box dah bersih
+    if(reasonInput) {
+        reasonInput.value = "";
+    }
+    
+    selectedId = null;
+    showState(3);
+}
+
+// 5. Fungsi tukar skrin
+function showState(stateNum) {
+    document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+    document.getElementById('state-' + stateNum).classList.remove('hidden');
+    
+    // Setiap kali balik ke State 1, update senarai terkini
+    if (stateNum === 1) {
+        renderAppointments();
+    }
+}
+
+// Jalankan render pertama kali bila page dibuka
+renderAppointments();
+    </script>
+</body>
+</html>

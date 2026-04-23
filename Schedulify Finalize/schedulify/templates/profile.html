@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+    
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+    <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+    <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+    <button onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+    <button onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+    <button onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+    <button class="active" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+</nav>
+    </header>
+
+    <div class="container">
+        <div id="page-profile">
+            <h1>Profile</h1>
+            <div class="card">
+                <div class="profile-info">
+                    <span>muazzaz07@gmail.com</span>
+                    <span>Student</span>
+                </div>
+                <div class="divider"></div>
+                <a class="menu-link" onclick="showPage('page-customize')">Customize Profile</a>
+                <div class="divider"></div>
+                <a class="menu-link" onclick="showPage('page-help')">Help Centre</a>
+                <div class="divider"></div>
+                <a class="menu-link" href="{{ url_for('welcome') }}" style="color: #004aad;">Logout</a>
+            </div>
+        </div>
+
+        <div id="page-customize" class="hidden">
+            <h1>Customize Profile</h1>
+            <div class="card">
+                <h3>Account details</h3>
+                <p style="margin: 15px 0;">Email : muazzaz07@gmail.com</p>
+                <div class="divider"></div>
+                <h3>Role</h3>
+                <p style="margin: 15px 0;">Student</p>
+                <div class="divider"></div>
+                <h3>Security</h3>
+                <a class="menu-link" onclick="showPage('page-password')">Change Password</a>
+                <a class="menu-link" onclick="showPage('page-security-q')">Update Security Questions</a>
+            </div>
+        </div>
+
+        <div id="page-password" class="hidden">
+            <h1>Change Password</h1>
+            <div class="card">
+                <h3>Security</h3>
+                <br>
+                <div class="form-group">
+                    <input type="password" placeholder="Current Password">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="New Password">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Confirm Password">
+                </div>
+                <div style="text-align: right;">
+                    <button class="save-btn" onclick="showPage('page-profile')">Save</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-security-q" class="hidden">
+    <h1>Update Security Questions</h1>
+    <div class="card">
+        <h3 style="font-weight: bold; margin-bottom: 20px;">Security</h3>
+        
+        <div class="security-item">
+            <div class="faq-question" onclick="toggleSecurityInput(this)">
+                What was your first pet's name? <span>v</span>
+            </div>
+            <div class="security-answer-box">
+                <input type="text" placeholder="Type your answer here...">
+            </div>
+        </div>
+
+        <div class="security-item">
+            <div class="faq-question" onclick="toggleSecurityInput(this)">
+                What is your mother's maiden name? <span>v</span>
+            </div>
+            <div class="security-answer-box">
+                <input type="text" placeholder="Type your answer here...">
+            </div>
+        </div>
+
+        <div class="security-item">
+            <div class="faq-question" onclick="toggleSecurityInput(this)">
+                What was the name of your primary school? <span>v</span>
+            </div>
+            <div class="security-answer-box">
+                <input type="text" placeholder="Type your answer here...">
+            </div>
+        </div>
+
+        <div style="text-align: right; margin-top: 20px;">
+            <button class="save-btn" onclick="showPage('page-profile')">Save</button>
+        </div>
+    </div>
+</div>
+
+        <div id="page-help" class="hidden">
+            <div style="background: white; color: #666; padding: 15px; border-radius: 50px; display: inline-block; margin-bottom: 20px;">
+                <h2 style="margin: 0; padding: 0 40px;">Help Center FAQs</h2>
+            </div>
+            
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">What is Schedulify? <span>v</span></div>
+                    <div class="faq-answer">Schedulify is a centralized web-based appointment system designed specifically for students to book consultation slots with lecturers. It replaces manual scheduling with an organized, digital dashboard to improve efficiency and reduce waiting times..</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">How do I book an appointment? <span>v</span></div>
+                    <div class="faq-answer">Once you log in as a student, simply browse the available lecturers, select your required service (Consultation or Counselling), choose an open time slot from their schedule, and submit your request. You can track the status of your booking directly from your dashboard.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">Can I cancel my appointment? <span>v</span></div>
+                    <div class="faq-answer">Yes, you can cancel your appointment through the system. However, standard cancellations must be made at least three working days before the scheduled time. For last-minute changes, you must use the Emergency Request feature and provide valid supporting evidence.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">How will I know if my appointment is approved? <span>v</span></div>
+                    <div class="faq-answer">Your appointment is instantly confirmed upon booking! You will see a "Confirmed" label on My Appointment immediately. However, please check your in-system notifications regularly, as lecturers may still cancel or reschedule in case of emergencies. A reminder will also be sent to you before your session starts.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">Can lecturers manage their own availability? <span>v</span></div>
+                    <div class="faq-answer">Absolutely. Lecturers have a dedicated module where they can set their available days and hours. They also have the authority to approve, reschedule, or decline appointment requests based on their academic schedule.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFaq(this)">Is there a history of my past appointments? <span>v</span></div>
+                    <div class="faq-answer">Yes, Schedulify includes an Appointment History feature. Once an appointment is marked as Completed, it is archived in your history tab, allowing both students and staff to keep track of past consultations and feedback for future reference.</div>
+                </div>
+            </div>
+
+            <div style="text-align: right;">
+                <button class="back-btn" onclick="showPage('page-profile')">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk tukar page tanpa refresh
+        function showPage(pageId) {
+            // Sembunyikan semua page
+            const pages = ['page-profile', 'page-customize', 'page-password', 'page-security-q', 'page-help'];
+            pages.forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            // Tunjukkan page yang dipilih
+            document.getElementById(pageId).classList.remove('hidden');
+            // Scroll ke atas
+            window.scrollTo(0, 0);
+        }
+
+// Fungsi untuk buka/tutup kotak jawapan security question
+function toggleSecurityInput(element) {
+    const item = element.parentElement;
+    
+    // Jika nak tutup soalan lain bila satu dibuka (Optional):
+    /*
+    document.querySelectorAll('.security-item').forEach(i => {
+        if(i !== item) i.classList.remove('active');
+    });
+    */
+
+    item.classList.toggle('active');
+}
+
+        // Fungsi Accordion untuk FAQ
+        function toggleFaq(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

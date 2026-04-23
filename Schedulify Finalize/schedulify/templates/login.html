@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">Schedulify</h1>
+        <div class="card">
+            <h2>Welcome back</h2>
+            <form action="{{ url_for('login') }}" method="POST">
+            <div class="input-group">
+            <input type="email" placeholder="Email" required>
+            </div>
+            <div class="input-group">
+            <input type="password" placeholder="Password" required>
+            <a href="{{ url_for('forgot') }}" class="forgot-link">Forgot password</a>
+        
+            <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p class="footer-text">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+        </div>
+    </div>
+</body>
+</html>
