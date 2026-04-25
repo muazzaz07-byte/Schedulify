@@ -1,0 +1,263 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Navbar Styling */
+.navbar {
+    width: 100%;
+    background: white;
+    padding: 40px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    color: #004aad;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.nav-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #555;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.nav-buttons button:hover, .nav-buttons button.active {
+    background: #dcdcdc;
+    transform: translateY(-2px);
+}
+
+.lecturer-header-container {
+    margin: 20px 0 40px;
+    text-align: center;
+}
+
+.lecturer-info h2 { color: #4a627d; font-size: 2rem; }
+.lecturer-info p { color: #888; }
+
+/* =========================================
+   STANDARD CALENDAR UI (IDENTICAL)
+   ========================================= */
+
+/* Wrapper Utama - Menampung Arrow & Kotak Putih */
+.calendar-wrapper, .calendar-outer-wrapper {
+   display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;           /* Pastikan wrapper ambil lebar penuh skrin */
+    max-width: 1300px;     /* Bagi ruang sikit untuk arrow kat kiri kanan */
+    margin: 0 auto;
+    gap: 20px;             /* Jarak antara arrow dan box putih */
+}
+
+/* Kotak Putih Utama */
+.calendar-card {
+    background: white;
+    padding: 20px;
+    border-radius: 25px;
+    
+    /* Guna gandingan ini untuk bagi dia lebar macam gambar kedua */
+    width: 90%;            /* Ambil 90% ruang skrin */
+    max-width: 1100px;     /* Had lebar maksimum supaya tak nampak pelik kat monitor besar */
+    
+    margin: 0 auto;        /* Bagi duduk tengah */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    
+    /* Penting: Kalau kau guna flex pada parent, tambah ni */
+    flex: 1; 
+}
+
+/* Header Hari */
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+    border-bottom: 2px solid #004aad;
+    padding-bottom: 15px;
+}
+
+.calendar-header h4, .day-col h4 { 
+    margin: 0; 
+    font-size: 1.2rem; 
+    color: #333; 
+    font-weight: bold;
+}
+
+.calendar-header span, .day-col span { 
+    font-size: 0.9rem; 
+    color: #777; 
+}
+
+/* Container Grid Masa (Scrollable) */
+.time-grid-scroll, .time-grid-container {
+    height: 400px; /* Tinggi kotak scroll */
+    overflow-y: auto;
+    margin-top: 20px;
+    padding-right: 5px;
+}
+
+/* Grid Slot Masa */
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+}
+
+/* Kotak Slot Masa */
+.slot {
+    border: 2px solid #ccc;
+    padding: 15px 5px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    background: white;
+    color: #4a627d;
+    transition: all 0.2s ease;
+}
+
+.slot:hover {
+    border-color: #004aad;
+    background-color: #f0f7ff;
+}
+
+.slot.booked {
+    border-color: #ff4d4d !important;
+    color: #ff4d4d !important;
+}
+
+/* Indikator Bawah (Arrow Down) */
+.bottom-indicators, .scroll-indicator {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    text-align: center;
+    margin-top: 15px;
+    color: #ccc;
+    font-size: 1.2rem;
+}
+
+/* Arrow Button (Segitiga) */
+.arrow-btn, .nav-arrow {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    flex-shrink: 0;
+}
+
+.arrow-shape-left {
+    width: 0; height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent; 
+    border-right: 20px solid #4a627d;
+}
+
+.arrow-shape-right {
+    width: 0; height: 0; 
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent; 
+    border-left: 20px solid #4a627d;
+}
+
+/* Responsive Tablet & Mobile */
+@media (max-width: 768px) {
+    .calendar-wrapper, .calendar-outer-wrapper {
+        gap: 10px;
+    }
+    .calendar-card {
+        padding: 15px;
+    }
+    .slot {
+        font-size: 0.75rem;
+        padding: 10px 2px;
+    }
+    .arrow-shape-left { border-right-width: 25px; }
+    .arrow-shape-right { border-left-width: 25px; }
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.15);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    width: 600px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+.details-box { margin: 25px 0; line-height: 1.8; color: #4a627d; font-size: 1.1rem; }
+
+.hidden { display: none !important; }
+
+textarea {
+    width: 100%;
+    height: 150px;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    background: #f4f4f4;
+    resize: none;
+}
+
+.option-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.opt-btn {
+    flex: 1;
+    background: #f0f0f0;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+
+
+.opt-btn strong { display: block; color: #004aad; font-size: 1.2rem; margin-bottom: 5px; }
+.opt-btn span { font-size: 0.85rem; color: #777; }
+
+.btn-yes { background: #004aad; color: white; border: none; padding: 12px 50px; border-radius: 25px; cursor: pointer; }
+.btn-cancel { background: #e8e8e8; color: #555; border: none; padding: 12px 50px; border-radius: 25px; cursor: pointer; }
+
+/* Scroll arrows */
+.scroll-indicator { display: flex; justify-content: center; gap: 40px; margin-top: 15px; color: #ccc; }

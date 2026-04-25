@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - My Appointments</title>
+    <link rel="stylesheet" href="appointment.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            <button onclick="location.href='manage.html'">Manage Appointment</button>
+            <button class="active" onclick="location.href='appointment.html'">My Appointments</button>
+            <button onclick="location.href='history.html'">Appointment History</button>
+            <button onclick="location.href='notification.html'">Notification</button>
+            <button onclick="location.href='feedback.html'">Feedback</button>
+            <button onclick="location.href='profile.html'">Profile</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">My Appointments</h1>
+        
+        <div class="status-badge">Confirmed</div>
+
+        <div class="appointment-scroll-container" id="appointmentList">
+            
+            <div class="appointment-card">
+                <div class="card-content">
+                    <p class="label">Appointment with</p>
+                    <h2 class="student-name">Naufal Ammar bin Rapizal</h2>
+                    <p class="details">Date: Monday, 13 April 2026</p>
+                    <p class="details">Lecturer Room, Block A (Level 3)</p>
+                    <p class="details">Time: 8:00 AM - 8:30 AM</p>
+                </div>
+                <div class="card-action">
+                    <button class="btn-absent" onclick="showModal(this)">Absent</button>
+                    <p class="action-hint">Click this when student didn't come</p>
+                </div>
+            </div>
+
+            <div class="appointment-card">
+                <div class="card-content">
+                    <p class="label">Appointment with</p>
+                    <h2 class="student-name">Hariez Muazzaz</h2>
+                    <p class="details">Date: Tuesday, 14 April 2026</p>
+                    <p class="details">Lecturer Room, Block A (Level 3)</p>
+                    <p class="details">Time: 10:00 AM - 10:30 AM</p>
+                </div>
+                <div class="card-action">
+                    <button class="btn-absent" onclick="showModal(this)">Absent</button>
+                    <p class="action-hint">Click this when student didn't come</p>
+                </div>
+            </div>
+
+            <div class="appointment-card">
+                <div class="card-content">
+                    <p class="label">Appointment with</p>
+                    <h2 class="student-name">Abqari Solihin</h2>
+                    <p class="details">Date: Wednesday, 15 April 2026</p>
+                    <p class="details">Lecturer Room, Block B (Level 2)</p>
+                    <p class="details">Time: 2:00 PM - 2:30 PM</p>
+                </div>
+                <div class="card-action">
+                    <button class="btn-absent" onclick="showModal(this)">Absent</button>
+                    <p class="action-hint">Click this when student didn't come</p>
+                </div>
+            </div>
+
+            <div class="scroll-arrow">▼</div>
+        </div>
+
+        <div id="noAppointment" class="empty-state" style="display: none;">
+            <p>No appointment for this time</p>
+            <div class="line-divider"></div>
+            <div class="scroll-arrow">▼</div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <h2>Confirmation</h2>
+            <p>Are you confident in your actions?</p>
+            <div class="modal-buttons">
+                <button class="btn-yes" onclick="confirmAbsent()">Yes</button>
+                <button class="btn-no" onclick="closeModal()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCard = null;
+
+        function showModal(button) {
+            currentCard = button.closest('.appointment-card');
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        function confirmAbsent() {
+            if (currentCard) {
+                currentCard.remove();
+                checkEmpty();
+            }
+            closeModal();
+        }
+
+        function checkEmpty() {
+            const list = document.getElementById('appointmentList');
+            const emptyMsg = document.getElementById('noAppointment');
+            // Kira baki kad (kecuali arrow)
+            const cards = list.getElementsByClassName('appointment-card');
+            if (cards.length === 0) {
+                list.style.display = 'none';
+                emptyMsg.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

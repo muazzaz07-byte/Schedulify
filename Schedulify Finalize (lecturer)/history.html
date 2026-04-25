@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Appointment History</title>
+    <link rel="stylesheet" href="history.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            <button onclick="location.href='manage.html'">Manage Appointment</button>
+            <button onclick="location.href='appointment.html'">My Appointments</button>
+            <button class="active" onclick="location.href='history.html'">Appointment History</button>
+            <button onclick="location.href='notification.html'">Notification</button>
+            <button onclick="location.href='feedback.html'">Feedback</button>
+            <button onclick="location.href='profile.html'">Profile</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1 class="page-title">History Appointment</h1>
+
+        <div class="history-card" id="historyCard">
+            <div class="column">
+                <div class="status-badge completed">Completed</div>
+                <div class="scroll-area" id="completedList">
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>Naufal Ammar bin Rapizal</h3>
+                        <p>Date: Monday, 13 April 2026</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: 9:30 AM - 10:00 AM</p>
+                    </div>
+
+                    <hr style="border: 0.5px solid #eee; margin: 10px 0;">
+
+                    <div class="appointment-item">
+                       <p>Appointment with</p>
+                       <h3>Abqari Solihin</h3>
+                       <p>Date: Tuesday, 14 April 2026</p>
+                       <p>Lecturer Room, Block A (Level 3)</p>
+                       <p>Time: 10:30 AM - 11:00 AM</p>
+                    </div>
+
+                    <hr style="border: 0.5px solid #eee; margin: 10px 0;">
+
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>Ahmad Ali</h3>
+                        <p>Date: Wednesday, 15 April 2026</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: 2:00 PM - 2:30 PM</p>
+                    </div>
+                    </div>
+                <div class="scroll-indicator">▼</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="column">
+                <div class="status-badge cancelled">Cancelled</div>
+                <div class="scroll-area" id="cancelledList">
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>Hariez Muazzaz bin Nor Azrie</h3>
+                        <p>Date: Monday, 13 April 2026</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: 13:00 PM - 13:30 PM</p>
+                        <button class="reason-link" onclick="openModal('student')">[ click here to read reason ]</button>
+                    </div>
+
+                    <hr style="border: 0.5px solid #eee; margin: 10px 0;">
+
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>Siti Aminah</h3>
+                        <p>Date: Thursday, 16 April 2026</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: 11:00 AM - 11:30 AM</p>
+                        <button class="reason-link" onclick="openModal('lecturer')">[ click here to read reason ]</button>
+                    </div>
+                </div>
+                <div class="scroll-indicator">▼</div>
+            </div>
+        </div>
+
+        <div id="noDataView" class="no-data-msg" style="display: none;">
+            <div class="history-card">
+                <div class="column">
+                    <div class="status-badge completed">Completed</div>
+                    <p class="empty-text">No appointment for this time</p>
+                </div>
+                <div class="divider"></div>
+                <div class="column">
+                    <div class="status-badge cancelled">Cancelled</div>
+                    <p class="empty-text">No appointment for this time</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="reasonModal" class="modal">
+        <div class="modal-content">
+            <h2>Reason</h2>
+            <p class="modal-status">Status: <span id="cancelStatus">Cancelled</span> by <span id="cancelBy">You</span></p>
+            <div class="reason-box">
+                <p id="reasonText">Physical meeting cancelled. Please reach out to me via email for an online consultation instead.</p>
+            </div>
+            <button class="btn-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(type) {
+            const modal = document.getElementById('reasonModal');
+            const cancelBy = document.getElementById('cancelBy');
+            const reasonText = document.getElementById('reasonText');
+
+            if(type === 'student') {
+                cancelBy.innerText = 'Student';
+                reasonText.innerText = 'I apologize, but I have a family emergency that requires my immediate attention. Thank you for understanding.';
+            } else {
+                cancelBy.innerText = 'You';
+                reasonText.innerText = 'Physical meeting cancelled. Please reach out to me via email for an online consultation instead.';
+            }
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            // Sesuai arahan: button close akan pergi back ke history
+            window.location.href = 'history.html';
+        }
+
+        // Script untuk check jika tiada appointment (Logic Simulasi)
+        function checkData() {
+            const hasData = true; // Tukar jadi false untuk lihat Gambar 4
+            if(!hasData) {
+                document.getElementById('historyCard').style.display = 'none';
+                document.getElementById('noDataView').style.display = 'block';
+            }
+        }
+        checkData();
+    </script>
+</body>
+</html>
