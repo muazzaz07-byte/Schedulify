@@ -12,178 +12,156 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #F2F2F2;/* background */
-  color: #9E9E9E;/* already registered? text */
+  background: #F2F2F2;
+  color: #9E9E9E;
 }
 
 .container {
-  margin: 0 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 15px;
 }
 
 .form-box {
-width: 100%;
-max-width: 450px;
-padding: 30px;
-background: #ffffff; /* Login border*/
-border-radius: 10px;
-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-display: none;
+  width: 100%;
+  max-width: 450px; /* Standardized width */
+  padding: 40px;    /* Increased padding for better scale */
+  background: #ffffff;
+  border-radius: 20px; /* Smoother corners */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  display: none;
 }
 
 .form-box.active {
   display: block;
 }
 
-h2 { /* Login text */
+h2 {
   font-size: 34px;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: #0050C3;
+  font-weight: 700;
+}
+
+/* Password Toggle Container */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  padding-right: 45px; /* Space for eye icon */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 40%; /* Adjusted for margin-bottom on input */
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
 }
 
 input, select {
   width: 100%;
-  padding: 12px;
-  background: #F2F2F2;/* email,password box */
-  border-radius: 6px;
-  border: none;
+  padding: 14px; /* Slightly larger inputs */
+  background: #F2F2F2;
+  border-radius: 8px;
+  border: 2px solid transparent;
   outline: none;
   font-size: 16px;
-  color: #000000;/* typing line text */
+  color: #000000;
   margin-bottom: 20px;
+  transition: border 0.3s;
+}
+
+input:focus, select:focus {
+  border: 2px solid #0050C3;
 }
 
 button {
-width: 100%;
-padding: 12px;
-background: #0050C3 ;/* Login button */
-border-radius: 6px;
-border: none;
-cursor: pointer;
-font-size: 16px;
-color: #ffffff;/* Login text in button */
-font-weight: 500;
-margin-bottom: 20px;
-transition: 0.5s;
+  width: 100%;
+  padding: 14px;
+  background: #0050C3;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 20px;
+  transition: background 0.3s;
 }
 
 button:hover {
-background:#0048ad ;/* hover button */
+  background: #0048ad;
 }
 
-P {
-    font-size: 14.5px;
-    text-align: center;
-    margin-bottom: 10px;
+p {
+  font-size: 14.5px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 p a {
-color: #0050C3;/* Register text */
-text-decoration: none;
+  color: #0050C3;
+  text-decoration: none;
+  font-weight: 500;
 }
 
 p a:hover {
-text-decoration: underline;
+  text-decoration: underline;
 }
 
-
-.error-message {
-padding: 12px;
-background: #f8d7da;
-border-radius: 6px;
-font-size: 16px;
-color: #a42834;
-text-align: center;
-margin-bottom: 20px;
+/* Status Messages */
+.msg-error {
+  padding: 12px;
+  background: #fee2e2;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #dc2626;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.success-message {
-padding: 12px;
-background: #d4edda;
-border-radius: 6px;
-font-size: 16px;
-color: #155724;
-text-align: center;
-margin-bottom: 20px;
+.msg-success {
+  padding: 12px;
+  background: #dcfce7;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #16a34a;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-/*------------------------------------Reset Password steps */
+/* Reset/Forgot Password Styling */
 .instruction-text, .question-label {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 10px;
-    text-align: left;
+  font-size: 14px;
+  color: #4b5563;
+  margin-bottom: 10px;
+  text-align: left;
 }
 
 .question-text {
-    font-weight: bold;
-    color: #004aad;
-    background: #f0f7ff;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    border-left: 5px solid #004aad;
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background-color: #004aad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
+  font-weight: 600;
+  color: #1f2937;
+  background: #f3f4f6;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 5px solid #0050C3;
 }
 
 .back-link {
-    margin-top: 20px;
-    font-size: 13px;
-    text-align: center;
-}
----------------------forgot-password---------------------
-    
-/* Reset Password Specifics */
-.instruction-text, .question-label {
-    font-size: 14px;
-    color: #4b5563;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-.question-text {
-    font-weight: bold;
-    color: #1f2937;
-    background: #f3f4f6;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
-    border-left: 4px solid #004aad;
-}
-
-.btn-primary {
-    width: 100%;
-    padding: 12px;
-    background-color: #004aad;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    margin-top: 10px;
-}
-
-.btn-primary:hover {
-    background-color: #003580;
-}
-
-.back-link {
-    margin-top: 20px;
-    font-size: 13px;
-    text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  text-align: center;
 }
 
 .back-link a {
-    color: #004aad;
-    text-decoration: none;
+  color: #0050C3;
+  text-decoration: none;
 }
