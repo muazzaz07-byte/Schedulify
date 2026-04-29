@@ -79,11 +79,42 @@ body {
 
         /* Profile & Details Styling */
         .profile-info {
-            display: flex;
-            justify-content: space-between;
-            padding: 15px 10px;
-            font-size: 1.2rem;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Selaraskan Role (Student) ke tengah secara vertikal */
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.user-details {
+    text-align: left;
+    display: flex;
+    flex-direction: column; /* Susun Username dan Email ke bawah */
+    gap: 5px;
+}
+
+.username {
+    font-size: 1.8rem;
+    color: #445069;
+    font-weight: bold;
+    margin: 0;
+}
+
+.email {
+    font-size: 1.1rem;
+    color: #666;
+    /* Tambah kod di bawah ini */
+    word-break: break-all; /* Ini akan paksa email sambung ke bawah kalau ruang tak cukup */
+    display: inline-block;
+    max-width: 100%; /* Pastikan dia tak makan ruang Role di sebelah */
+}
+
+.role {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #445069;
+}
 
         .divider {
             height: 1px;

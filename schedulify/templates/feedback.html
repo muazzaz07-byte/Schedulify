@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schedulify - Feedback</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+    <script src="{{ url_for('static', filename='feedback.js') }}"></script>
 </head>
 <body>
 
@@ -62,7 +63,7 @@
 
                 <div class="action-buttons">
                     <button class="btn-cancel" onclick="resetForm()">Cancel</button>
-                    <button class="btn-done" onclick="location.href='{{ url_for('book') }}'">Done</button>
+                    <button class="btn-submit" onclick="showSuccess()">Submit Feedback</button>
                 </div>
             </div>
         </div>
@@ -75,7 +76,7 @@
                     Our team will look into it!
                 </p>
                 <div class="done-wrapper">
-                    <button class="btn-done" onclick="location.href='book.html'">Done</button>
+                    <button class="btn-done" onclick="location.href='{{ url_for('book') }}'">Done</button>
                 </div>
             </div>
         </div>
