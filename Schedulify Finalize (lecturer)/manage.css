@@ -53,95 +53,80 @@ body {
     transform: translateY(-2px);
 }
 
-.lecturer-header-container {
-    margin: 20px 0 40px;
+/* Main Container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 10px 20px;
     text-align: center;
+    
 }
 
-.lecturer-info h2 { color: #4a627d; font-size: 2rem; }
-.lecturer-info p { color: #888; }
+.hidden { display: none !important; }
 
-/* =========================================
-   STANDARD CALENDAR UI (IDENTICAL)
-   ========================================= */
+.lecturer-header-container {
+    margin-bottom: 30px;
+}
 
-/* Wrapper Utama - Menampung Arrow & Kotak Putih */
-.calendar-wrapper, .calendar-outer-wrapper {
-   display: flex;
+.lecturer-info h2 { color: #4a627d; font-size: 2rem; margin-bottom: 5px; }
+.lecturer-info p { color: #888; font-size: 1.1rem; }
+
+/* Calendar Wrapper */
+.calendar-wrapper {
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;           /* Pastikan wrapper ambil lebar penuh skrin */
-    max-width: 1300px;     /* Bagi ruang sikit untuk arrow kat kiri kanan */
-    margin: 0 auto;
-    gap: 20px;             /* Jarak antara arrow dan box putih */
+    gap: 30px;
 }
 
-/* Kotak Putih Utama */
 .calendar-card {
     background: white;
-    padding: 20px;
+    width: 1000px;
     border-radius: 25px;
-    
-    /* Guna gandingan ini untuk bagi dia lebar macam gambar kedua */
-    width: 90%;            /* Ambil 90% ruang skrin */
-    max-width: 1100px;     /* Had lebar maksimum supaya tak nampak pelik kat monitor besar */
-    
-    margin: 0 auto;        /* Bagi duduk tengah */
+    padding: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    box-sizing: border-box;
-    
-    /* Penting: Kalau kau guna flex pada parent, tambah ni */
-    flex: 1; 
 }
 
-/* Header Hari */
 .calendar-header {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    text-align: center;
+    grid-template-columns: repeat(5, 1fr); /* 5 Kolum (Isnin-Jumaat) */
     border-bottom: 2px solid #004aad;
     padding-bottom: 15px;
+    margin-bottom: 10px;
 }
 
-.calendar-header h4, .day-col h4 { 
-    margin: 0; 
-    font-size: 1.2rem; 
-    color: #333; 
-    font-weight: bold;
-}
+.day-col h4 { margin: 0; font-size: 1.2rem; color: #333; }
+.day-col span { font-size: 0.85rem; color: #777; }
 
-.calendar-header span, .day-col span { 
-    font-size: 0.9rem; 
-    color: #777; 
-}
-
-/* Container Grid Masa (Scrollable) */
-.time-grid-scroll, .time-grid-container {
-    height: 400px; /* Tinggi kotak scroll */
+/* Slot Grid */
+.time-grid-container {
+    height: 400px; /* Tinggi scroll */
     overflow-y: auto;
-    margin-top: 20px;
-    padding-right: 5px;
+    padding-top: 15px;
 }
 
-/* Grid Slot Masa */
 .time-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, 1fr); /* Mesti 5 kolum supaya selari dengan header */
     gap: 15px;
 }
 
-/* Kotak Slot Masa */
+/* Slot Styling */
 .slot {
-    border: 2px solid #ccc;
+    border: 1.5px solid #ddd;
     padding: 15px 5px;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    font-weight: bold;
-    cursor: pointer;
     background: white;
-    color: #4a627d;
-    transition: all 0.2s ease;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #666;
+    transition: 0.2s;
+}
+
+.slot.available { color: #4a627d; }
+.slot.booked {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
 }
 
 .slot:hover {
@@ -149,115 +134,185 @@ body {
     background-color: #f0f7ff;
 }
 
-.slot.booked {
-    border-color: #ff4d4d !important;
-    color: #ff4d4d !important;
+/* Arrows */
+.arrow-btn {
+    background: none; border: none; font-size: 3rem;
+    color: #4a627d; cursor: pointer; transition: 0.3s;
+}
+.arrow-btn:hover { transform: scale(1.2); color: #004aad; }
+
+.scroll-indicator {
+    display: flex; justify-content: space-around;
+    padding-top: 20px; color: #ddd;
 }
 
-/* Indikator Bawah (Arrow Down) */
-.bottom-indicators, .scroll-indicator {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    text-align: center;
-    margin-top: 15px;
-    color: #ccc;
-    font-size: 1.2rem;
-}
-
-/* Arrow Button (Segitiga) */
-.arrow-btn, .nav-arrow {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 10px;
-    flex-shrink: 0;
-}
-
-.arrow-shape-left {
-    width: 0; height: 0; 
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent; 
-    border-right: 20px solid #4a627d;
-}
-
-.arrow-shape-right {
-    width: 0; height: 0; 
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent; 
-    border-left: 20px solid #4a627d;
-}
-
-/* Responsive Tablet & Mobile */
-@media (max-width: 768px) {
-    .calendar-wrapper, .calendar-outer-wrapper {
-        gap: 10px;
-    }
-    .calendar-card {
-        padding: 15px;
-    }
-    .slot {
-        font-size: 0.75rem;
-        padding: 10px 2px;
-    }
-    .arrow-shape-left { border-right-width: 25px; }
-    .arrow-shape-right { border-left-width: 25px; }
-}
-
-/* Modals */
+/* --- BASE MODAL OVERLAY --- */
 .modal {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.15);
-    display: flex; justify-content: center; align-items: center;
-    z-index: 2000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
+/* --- MODAL CONTENT BOX --- */
 .modal-content {
     background: white;
     padding: 40px;
-    border-radius: 25px;
-    width: 600px;
+    border-radius: 30px;
+    width: 550px; /* Standard width */
     text-align: center;
     box-shadow: 0 15px 40px rgba(0,0,0,0.2);
 }
 
-.details-box { margin: 25px 0; line-height: 1.8; color: #4a627d; font-size: 1.1rem; }
-
-.hidden { display: none !important; }
-
-textarea {
-    width: 100%;
-    height: 150px;
-    margin: 20px 0;
-    padding: 15px;
-    border-radius: 15px;
-    border: 1px solid #ccc;
-    background: #f4f4f4;
-    resize: none;
+/* Khusus untuk Modal Choice (Lebar sikit sebab ada 2 kotak) */
+.choice-modal-content {
+    width: 750px !important; 
+    padding: 50px 40px !important;
 }
 
-.option-row {
+/* --- TEXT STYLING INSIDE MODAL --- */
+.modal-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.modal-subtitle {
+    font-size: 1rem;
+    color: #777;
+    line-height: 1.4;
+    margin-bottom: 30px;
+    padding: 0 20px;
+}
+
+.appointment-details {
+    margin-bottom: 30px;
+}
+
+.detail-label {
+    font-size: 1.2rem;
+    color: #4a627d;
+    margin-bottom: 15px;
+}
+
+.student-highlight {
+    color: #004aad;
+    font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.detail-text {
+    font-size: 1.1rem;
+    color: #5d707f;
+    margin: 5px 0;
+}
+
+/* --- INPUT / TEXTAREA STYLING --- */
+.input-container {
+    width: 100%;
+    padding: 0 10px;
+    margin: 20px 0 30px 0;
+}
+
+textarea#cancel-reason {
+    width: 100%;
+    height: 200px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid #e0e0e0;
+    background-color: #f5f5f5;
+    font-size: 1rem;
+    color: #666;
+    resize: none;
+    outline: none;
+    transition: 0.3s;
+}
+
+textarea#cancel-reason:focus {
+    border-color: #004aad;
+    background-color: #fff;
+}
+
+/* --- BUTTONS SYSTEM --- */
+.modal-btns {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* Base Button Style */
+.btn-yes, .btn-submit, .btn-cancel {
+    padding: 12px 0;
+    width: 200px; /* Uniform width untuk semua butang modal */
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    transition: 0.3s;
+}
+
+/* Specific Colors */
+.btn-yes, .btn-submit {
+    background: #004aad;
+    color: white;
+}
+
+.btn-cancel {
+    background: #e9e9e9;
+    color: #888;
+}
+
+.btn-effect:active {
+    transform: scale(0.95);
+}
+
+/* --- CHOICE CARDS (Side-by-side) --- */
+.choice-container {
     display: flex;
     gap: 20px;
+    justify-content: center;
     margin-top: 30px;
 }
 
-.opt-btn {
+.choice-card {
     flex: 1;
-    background: #f0f0f0;
-    padding: 20px;
-    border-radius: 15px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 20px;
+    padding: 30px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    transition: 0.3s;
+    min-height: 160px;
 }
 
+.choice-card:hover {
+    background: #ececec;
+    transform: translateY(-5px);
+}
 
+.choice-title {
+    color: #004aad;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
 
-.opt-btn strong { display: block; color: #004aad; font-size: 1.2rem; margin-bottom: 5px; }
-.opt-btn span { font-size: 0.85rem; color: #777; }
-
-.btn-yes { background: #004aad; color: white; border: none; padding: 12px 50px; border-radius: 25px; cursor: pointer; }
-.btn-cancel { background: #e8e8e8; color: #555; border: none; padding: 12px 50px; border-radius: 25px; cursor: pointer; }
-
-/* Scroll arrows */
-.scroll-indicator { display: flex; justify-content: center; gap: 40px; margin-top: 15px; color: #ccc; }
+.choice-desc {
+    color: #777;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-align: center;
+}

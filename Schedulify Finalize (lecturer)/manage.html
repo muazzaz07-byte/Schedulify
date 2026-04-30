@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedulify - Manage Appointments</title>
+    <title>Schedulify - Manage Appointment</title>
     <link rel="stylesheet" href="manage.css">
-    <script src="manage.js"></script>
 </head>
 <body>
 
@@ -13,7 +12,8 @@
         <div class="logo">Schedulify</div>
         <nav class="nav-buttons">
             <button class="active" onclick="location.href='manage.html'">Manage Appointment</button>
-            <button onclick="location.href='appointment.html'">My Appointments</button>
+            <button onclick="location.href='block.html'">Block Slot</button>
+            <button onclick="location.href='appointments.html'">My Appointments</button>
             <button onclick="location.href='history.html'">Appointment History</button>
             <button onclick="location.href='notification.html'">Notification</button>
             <button onclick="location.href='feedback.html'">Feedback</button>
@@ -22,113 +22,119 @@
     </header>
 
     <main class="container">
-        <div class="lecturer-header-container">
-            <div class="lecturer-info">
-                <h2>Mrs. Norwahida Syazwani Binti Othman</h2>
-                <p>Lecturer Room, Block A (Level 3)</p>
-            </div>
-        </div>
-
-        <div class="calendar-outer-wrapper">
-    <button class="nav-arrow left-arrow" onclick="changeWeek(-1)">
-        <div class="arrow-shape-left"></div>
-    </button>
-
-    <div class="calendar-card">
-        <div class="calendar-header" id="calendar-days">
-            </div>
-        <div class="time-grid-scroll">
-            <div class="time-grid" id="time-slots">
-                </div>
-        </div>
-        <div class="bottom-indicators">
-            <span>▼</span><span>▼</span><span>▼</span><span>▼</span><span>▼</span>
-        </div>
-    </div>
-
-    <button class="nav-arrow right-arrow" onclick="changeWeek(1)">
-        <div class="arrow-shape-right"></div>
-    </button>
-</div>
-
-        <div id="modal-block-init" class="modal hidden">
-            <div class="modal-content">
-                <h1>Block This Time Slot?</h1>
-                <p>Set this slot to 'Unavailable' for students.</p>
-                <div class="details-box">
-                    <p id="block-date"></p>
+        <section id="step-calendar" class="view">
+            <div class="lecturer-header-container">
+                <div class="lecturer-info">
+                    <h2>Mrs. Norwahida Syazwani Binti Othman</h2>
                     <p>Lecturer Room, Block A (Level 3)</p>
-                    <p id="block-time"></p>
-                </div>
-                <div class="modal-btns">
-                    <button class="btn-yes btn-effect" onclick="openConfirmationAction('block')">Yes</button>
-                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
                 </div>
             </div>
-        </div>
 
-        <div id="modal-cancel-init" class="modal hidden">
-            <div class="modal-content">
-                <h1>Cancel This Appointment?</h1>
-                <p style="font-size: 0.9rem; color: #888;">This action will notify the student. The student will receive an immediate notification regarding this change.</p>
-                <div class="details-box">
-                    <p>You have appointment with</p>
-                    <h3 id="student-name" style="color: #004aad; margin: 10px 0;">Naufal Ammar bin Rapizal</h3>
-                    <p id="cancel-date"></p>
-                    <p>Lecturer Room, Block A (Level 3)</p>
-                    <p id="cancel-time"></p>
-                </div>
+            <div class="calendar-wrapper">
+                <!-- Arrow Navigation Luar Kotak -->
+                <button class="arrow-btn left btn-effect" onclick="changeWeek(-1)">&#9664;</button>
                 
-                <div class="modal-btns">
-                    <button class="btn-yes btn-effect" onclick="openReasonForm()">Yes</button>
-                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-reason" class="modal hidden">
-            <div class="modal-content">
-                <h1>Reason for cancellation</h1>
-                <textarea placeholder="Please provide a short reason for the student (e.g., Emergency Meeting, Medical Leave)"></textarea>
-                <div class="modal-btns">
-                    <button class="btn-yes btn-effect" onclick="openPostCancelOptions()">Submit</button>
-                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="modal-post-cancel" class="modal hidden">
-            <div class="modal-content">
-                <h1 style="font-size: 2.2rem;">Appointment <span style="color: red;">Cancelled</span></h1>
-                <p>The student has been notified. How would you like to set this slot now?</p>
-                
-                <div class="option-row">
-                    <div class="opt-btn btn-effect" onclick="openConfirmationAction('available')">
-                        <strong>Keep Available</strong>
-                        <span>Allow other students to book this time.</span>
+                <div class="calendar-card">
+                    <div class="calendar-header" id="calendar-days">
+                        <!-- Rendered by JS -->
                     </div>
-                    <div class="opt-btn btn-effect" onclick="openConfirmationAction('block')">
-                        <strong>Block Slot</strong>
-                        <span>Make this time unavailable for everyone.</span>
+                    <div class="time-grid-container">
+                        <div class="time-grid" id="time-slots">
+                            <!-- Rendered by JS -->
+                        </div>
+                    </div>
+                    <!-- Scroll Indicators -->
+                    <div class="scroll-indicator">
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div id="modal-final-confirm" class="modal hidden">
+                <button class="arrow-btn right btn-effect" onclick="changeWeek(1)">&#9654;</button>
+            </div>
+        </section>
+
+        <!-- Modal 1: Cancel Confirmation -->
+<div id="modal-cancel" class="modal hidden">
     <div class="modal-content">
-        <h1>Confirmation</h1>
+        <h1 class="modal-title">Cancel This Appointment?</h1>
+        <p class="modal-subtitle">This action will notify the student. The student will receive an immediate notification regarding this change.</p>
         
-        <p style="margin-bottom: 40px; margin-top: 10px; line-height: 1.6; color: #666;">
-            Are you confident in your actions?
-        </p>
+        <div class="appointment-details">
+            <p class="detail-label">You have appointment with</p>
+            <h3 id="student-name" class="student-highlight">Naufal Ammar bin Rapizal</h3>
+            <p id="cancel-date" class="detail-text"></p>
+            <p class="detail-text">Lecturer Room, Block A (Level 3)</p>
+            <p id="cancel-time" class="detail-text"></p>
+        </div>
 
         <div class="modal-btns">
-            <button class="btn-yes btn-effect" onclick="finishAction()">Yes</button>
-            <button class="btn-cancel btn-effect" onclick="closeAllModals()">No</button>
+            <button class="btn-yes btn-effect" onclick="openReasonModal()">Yes</button>
+            <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
         </div>
     </div>
 </div>
+        <!-- Modal 2: Reason -->
+<div id="modal-reason" class="modal hidden">
+    <div class="modal-content">
+        <h1 class="modal-title">Reason for cancellation</h1>
+        
+        <div class="input-container">
+            <textarea id="cancel-reason" placeholder="Please provide a short reason for the student (e.g., Emergency Meeting, Medical Leave)"></textarea>
+        </div>
+
+        <div class="modal-btns">
+            <button class="btn-submit btn-effect" onclick="openChoiceModal()">Submit</button>
+            <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+        <!-- Modal 3: Choice -->
+<div id="modal-choice" class="modal hidden">
+    <div class="modal-content choice-modal-content">
+        <h1 class="modal-title">Appointment <span style="color: red;">Cancelled</span></h1>
+        <p class="modal-subtitle">The student has been notified. How would you like to set this slot now?</p>
+        
+        <div class="choice-container">
+            <button class="choice-card btn-effect" onclick="openFinalConfirm()">
+                <strong class="choice-title">Keep Available</strong>
+                <span class="choice-desc">Allow other students to book this time.</span>
+            </button>
+            
+            <button class="choice-card btn-effect" onclick="openFinalConfirm()">
+                <strong class="choice-title">Block Slot</strong>
+                <span class="choice-desc">Make this time unavailable for everyone.</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+        <!-- Modal 4: Final Confirmation -->
+        <div id="modal-final" class="modal hidden">
+            <div class="modal-content">
+                <h1>Confirmation Cancellation</h1>
+                <p style="margin: 30px 0;">Are you confident in your actions?</p>
+                <div class="modal-btns">
+                    <button class="btn-yes btn-effect" onclick="showSuccess()">Yes</button>
+                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">No</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal 5: Success -->
+        <div id="modal-success" class="modal hidden">
+            <div class="modal-content">
+                <h1 style="color: #004aad; font-size: 2.5rem;">Success!</h1>
+                <h2 style="margin: 20px 0; color: #334155;">Action completed successfully.</h2>
+                <button class="btn-yes btn-effect" onclick="location.reload()">Done</button>
+            </div>
+        </div>
     </main>
+
+    <script src="manage.js"></script>
 </body>
 </html>
