@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDateRestrictions(); // Fungsi baharu untuk had tarikh
 });
 
-// --- FUNGSI BAHARU: SEKATAN TARIKH (REAL-TIME & 1 BULAN) ---
+// --- FUNGSI DIKEMASKINI: SEKATAN TARIKH (REAL-TIME & 1 BULAN + 1 MINGGU) ---
 function setupDateRestrictions() {
     const startDateInput = document.getElementById('startDate');
     const endDateInput = document.getElementById('endDate');
@@ -16,9 +16,9 @@ function setupDateRestrictions() {
     const dd = String(today.getDate()).padStart(2, '0');
     const minDate = `${yyyy}-${mm}-${dd}`;
 
-    // 2. Kira had 1 bulan (30 hari) ke hadapan
+    // 2. Kira had 1 bulan + 1 minggu (30 + 7 = 37 hari) ke hadapan
     const maxDateObj = new Date();
-    maxDateObj.setDate(today.getDate() + 30);
+    maxDateObj.setDate(today.getDate() + 37); // Tambah 37 hari
     const mY = maxDateObj.getFullYear();
     const mM = String(maxDateObj.getMonth() + 1).padStart(2, '0');
     const mD = String(maxDateObj.getDate()).padStart(2, '0');
