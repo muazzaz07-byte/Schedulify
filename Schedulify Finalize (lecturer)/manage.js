@@ -12,14 +12,26 @@ function renderCalendar() {
     slotsContainer.innerHTML = "";
 
     const days = ["MON", "TUE", "WED", "THU", "FRI"];
-    const baseDate = new Date(2026, 3, 13); // Start 13 April 2026
+    
+    // 1. Dapatkan tarikh real-time hari ini
+    const today = new Date();
+    const currentDay = today.getDay();
+    
+    // 2. Cari hari Isnin minggu ini sebagai titik mula
+    const diffToMonday = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); 
+    const startOfCurrentWeek = new Date(new Date().setDate(diffToMonday));
+    startOfCurrentWeek.setHours(0, 0, 0, 0);
+
+    // 3. Kira tarikh berdasarkan offset minggu sekarang
+    const baseDate = new Date(startOfCurrentWeek);
     baseDate.setDate(baseDate.getDate() + (currentWeekOffset * 7));
 
-    // 1. Render Header
+    // Render Header
     days.forEach((day, index) => {
         const date = new Date(baseDate);
         date.setDate(date.getDate() + index);
         const dateStr = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        
         daysContainer.innerHTML += `
             <div class="day-col">
                 <h4>${day}</h4>
@@ -28,7 +40,7 @@ function renderCalendar() {
         `;
     });
 
-    // 2. Render Slots (8:00 AM - 6:00 PM)
+    // Render Slots (8:00 AM - 6:00 PM)
     for (let hour = 8; hour < 18; hour++) {
         for (let min of ["00", "30"]) {
             let period = hour >= 12 ? "PM" : "AM";
@@ -37,18 +49,29 @@ function renderCalendar() {
             let timeLabel = `${displayHour}:${min} ${period}`;
 
             for (let i = 0; i < 5; i++) {
-                // Simulasi data booked (Warna Merah) vs Available (Kelabu)
+                const date = new Date(baseDate);
+                date.setDate(date.getDate() + i);
+                
+                const slotDateTime = new Date(date);
+                slotDateTime.setHours(hour, parseInt(min), 0, 0);
+                const now = new Date();
+
+                // Sekatan Tarikh Lampau
+                const isPast = slotDateTime < now;
+
                 let isBooked = Math.random() < 0.2; 
                 let statusClass = isBooked ? "booked" : "available";
                 
-                const date = new Date(baseDate);
-                date.setDate(date.getDate() + i);
-                const dateStr = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+                if (isPast) {
+                    statusClass += " disabled-slot";
+                }
 
-                let onClickAttr = isBooked ? `onclick="openCancelFlow('${timeLabel}', '${dateStr}')"` : "";
+                const dateStrFull = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
+
+                let onClickAttr = (isBooked && !isPast) ? `onclick="openCancelFlow('${timeLabel}', '${dateStrFull}')"` : "";
 
                 slotsContainer.innerHTML += `
-                    <div class="slot ${statusClass}" ${onClickAttr}>
+                    <div class="slot ${statusClass}" ${onClickAttr} ${isPast ? 'style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                         ${timeLabel}
                     </div>
                 `;
@@ -57,7 +80,19 @@ function renderCalendar() {
     }
 }
 
-// Modal Flow Logic
+// Navigasi Dinamik (Had 4 Minggu / 1 Bulan)
+function changeWeek(direction) {
+    const newOffset = currentWeekOffset + direction;
+    
+    // Had: Tidak boleh ke belakang ( < 0 ) dan tidak boleh lebih 4 minggu ke depan ( <= 4 )
+    // Setiap kali tarikh real-time berubah (minggu depan), minggu ke-5 yang baru akan terbuka secara automatik.
+    if (newOffset >= 0 && newOffset <= 4) {
+        currentWeekOffset = newOffset;
+        renderCalendar();
+    }
+}
+
+// --- FUNGSI MODAL ASAL (TIADA PERUBAHAN) ---
 function openCancelFlow(time, date) {
     document.getElementById('cancel-date').innerText = "Date: " + date;
     document.getElementById('cancel-time').innerText = "Time: " + time;
@@ -91,9 +126,4 @@ function hideAllModals() {
 
 function closeAllModals() {
     hideAllModals();
-}
-
-function changeWeek(direction) {
-    currentWeekOffset += direction;
-    renderCalendar();
 }

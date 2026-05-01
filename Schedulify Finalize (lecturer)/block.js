@@ -12,7 +12,7 @@ function populateTimeDropdowns() {
     let hour = 8;
     let min = 0;
 
-    while (hour < 17 || (hour === 17 && min <= 30)) {
+    while (hour < 18 || (hour === 18 && min <= 0)) {
         let period = hour >= 12 ? 'PM' : 'AM';
         let displayHour = hour > 12 ? hour - 12 : hour;
         let timeStr = `${displayHour}:${min === 0 ? '00' : '30'} ${period}`;
