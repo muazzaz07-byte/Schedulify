@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Manage Blocked Slot</title>
+    <link rel="stylesheet" href="unblock.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            <button onclick="location.href='manage.html'">Manage Appointment</button>
+            <button onclick="location.href='block.html'">Block Slot</button>
+            <button class="active" onclick="location.href='unblock.html'">Manage Blocked Slot</button>
+            <button onclick="location.href='appointment.html'">My Appointment</button>
+            <button onclick="location.href='history.html'">Appointment History</button>
+            <button onclick="location.href='notification.html'">Notification</button>
+            <button onclick="location.href='feedback.html'">Feedback</button>
+            <button onclick="location.href='profile.html'">Profile</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Main History Card -->
+        <section class="card main-history-card">
+            <h1 class="title">Blocked Slots History</h1>
+            
+            <!-- Container untuk senarai slot -->
+            <div id="slots-container">
+                <!-- Slot 1 (Gambar 1) -->
+                <div class="slot-item" id="slot-1">
+                    <div class="slot-details">
+                        <p>Start Date - End Date:</p>
+                        <h3>1 April 2026 - 30 April 2026</h3>
+                        <p>Start Time - End Time:</p>
+                        <h3>11:00 AM - 1:00 PM</h3>
+                        <p>Repeated Days:</p>
+                        <h3>MON, THU, FRI</h3>
+                    </div>
+                    <button class="btn btn-unblock" onclick="confirmUnblock('slot-1')">Unblock</button>
+                </div>
+
+                <!-- Slot Tambahan 2 -->
+                <div class="slot-item" id="slot-2">
+                    <div class="slot-details">
+                        <p>Start Date - End Date:</p>
+                        <h3>5 May 2026 - 10 May 2026</h3>
+                        <p>Start Time - End Time:</p>
+                        <h3>9:00 AM - 10:30 AM</h3>
+                        <p>Repeated Days:</p>
+                        <h3>TUE, WED</h3>
+                    </div>
+                    <button class="btn btn-unblock" onclick="confirmUnblock('slot-2')">Unblock</button>
+                </div>
+            </div>
+
+            <!-- Empty State (Gambar 3 - Tersembunyi pada asalnya) -->
+            <div id="empty-state" class="hidden">
+                <p class="empty-text">No Blocked Slot for this time</p>
+            </div>
+        </section>
+
+        <!-- Confirmation Overlay (Gambar 2) -->
+        <div id="unblock-overlay" class="overlay hidden">
+            <div class="card warning-card">
+                <h1 class="title">Unblock This Time Slot?</h1>
+                <p class="subtitle">Set this slot to 'Available' for students.</p>
+                
+                <div class="confirm-info">
+                    <p>Start Date - End Date:</p>
+                    <h2 id="modalDate">1 April 2026 - 30 April 2026</h2>
+                    <p>Start Time - End Time:</p>
+                    <h2 id="modalTime">11:00 AM - 1:00 PM</h2>
+                    <p>Repeated Days:</p>
+                    <h2 id="modalDays">MON, THU, FRI</h2>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-yes" onclick="executeUnblock()">Yes</button>
+                    <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="unblock.js"></script>
+</body>
+</html>
