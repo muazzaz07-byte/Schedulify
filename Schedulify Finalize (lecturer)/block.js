@@ -1,9 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
     populateTimeDropdowns();
     setupDaySelection();
+    setupDateRestrictions(); // Fungsi baharu untuk had tarikh
 });
 
-// 1. Generate masa dari 8:00 AM hingga 5:30 PM (selang 30 min)
+// --- FUNGSI BAHARU: SEKATAN TARIKH (REAL-TIME & 1 BULAN) ---
+function setupDateRestrictions() {
+    const startDateInput = document.getElementById('startDate');
+    const endDateInput = document.getElementById('endDate');
+
+    // 1. Dapatkan tarikh hari ini (Real-time)
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+
+    // 2. Kira had 1 bulan (30 hari) ke hadapan
+    const maxDateObj = new Date();
+    maxDateObj.setDate(today.getDate() + 30);
+    const mY = maxDateObj.getFullYear();
+    const mM = String(maxDateObj.getMonth() + 1).padStart(2, '0');
+    const mD = String(maxDateObj.getDate()).padStart(2, '0');
+    const maxDate = `${mY}-${mM}-${mD}`;
+
+    // Set attribute min dan max pada input date
+    startDateInput.setAttribute('min', minDate);
+    startDateInput.setAttribute('max', maxDate);
+    endDateInput.setAttribute('min', minDate);
+    endDateInput.setAttribute('max', maxDate);
+
+    // Pastikan endDate tidak boleh sebelum startDate
+    startDateInput.addEventListener('change', () => {
+        endDateInput.setAttribute('min', startDateInput.value);
+    });
+}
+
+// 1. Generate masa dari 8:00 AM hingga 5:30 PM (Kekal Asal)
 function populateTimeDropdowns() {
     const startSelect = document.getElementById('startTime');
     const endSelect = document.getElementById('endTime');
@@ -32,7 +65,7 @@ function populateTimeDropdowns() {
     });
 }
 
-// 2. Logic Pilih Hari
+// 2. Logic Pilih Hari (Kekal Asal)
 function setupDaySelection() {
     const buttons = document.querySelectorAll('.day-btn');
     buttons.forEach(btn => {
@@ -42,7 +75,7 @@ function setupDaySelection() {
     });
 }
 
-// 3. Reset Borang (Cancel Gambar 1)
+// 3. Reset Borang (Kekal Asal)
 function resetForm() {
     document.getElementById('startDate').value = '';
     document.getElementById('endDate').value = '';
@@ -51,7 +84,7 @@ function resetForm() {
     document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('selected'));
 }
 
-// 4. Papar Gambar 2 (Confirmation)
+// 4. Papar Gambar 2 (Confirmation) (Kekal Asal)
 function showConfirmation() {
     const startD = document.getElementById('startDate').value;
     const endD = document.getElementById('endDate').value;
@@ -61,7 +94,6 @@ function showConfirmation() {
         return;
     }
 
-    // Ambil hari yang dipilih
     const selectedDays = Array.from(document.querySelectorAll('.day-btn.selected'))
                               .map(b => b.getAttribute('data-day'));
     
@@ -78,15 +110,13 @@ function hideConfirmation() {
     document.getElementById('block-form-section').classList.remove('hidden');
 }
 
-// 5. Logic Simulasi Gambar 3 & 4
+// 5. Logic Simulasi Gambar 3 & 4 (Kekal Asal)
 function processBlock() {
-    // Simulasi: 50% kemungkinan ada slot bertindih (Warning) atau berjaya (Unblock page)
     const hasConflict = Math.random() > 0.5;
 
     if (hasConflict) {
         document.getElementById('warning-overlay').classList.remove('hidden');
     } else {
-        // Jika berjaya, pergi ke unblock.html (Gambar 4)
         location.href = 'unblock.html';
     }
 }
