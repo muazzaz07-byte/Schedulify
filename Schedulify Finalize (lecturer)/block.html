@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Block Slot</title>
+    <link rel="stylesheet" href="block.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            <button onclick="location.href='manage.html'">Manage Appointment</button>
+            <button class="active" onclick="location.href='block.html'">Block Slot</button>
+            <button onclick="location.href='appointment.html'">My Appointment</button>
+            <button onclick="location.href='history.html'">Appointment History</button>
+            <button onclick="location.href='notification.html'">Notification</button>
+            <button onclick="location.href='feedback.html'">Feedback</button>
+            <button onclick="location.href='profile.html'">Profile</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- Section 1: Block Slot Form -->
+        <section class="card shadow-main">
+            <h1 class="title">Block Slot</h1>
+            <p class="subtitle">Set this slot to 'Unavailable' for students.</p>
+
+            <div class="form-group">
+                <h3 class="group-label">Choose Date</h3>
+                <div class="input-row">
+                    <div class="input-box">
+                        <label>Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <span>-</span>
+                    <div class="input-box">
+                        <label>End Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+                </div>
+                <p class="hint">Set the same date for both Start and End if blocking only one specific day.</p>
+            </div>
+
+            <div class="form-group">
+                <h3 class="group-label">Choose Time</h3>
+                <div class="input-row">
+                    <div class="input-box">
+                        <label>Start Time</label>
+                        <select id="startTime"></select>
+                    </div>
+                    <span>-</span>
+                    <div class="input-box">
+                        <label>End Time</label>
+                        <select id="endTime"></select>
+                    </div>
+                </div>
+                <p class="hint">This time range will apply to every selected date within your range.</p>
+            </div>
+
+            <div class="form-group">
+                <h3 class="group-label">Repeat Days Selected</h3>
+                <div class="days-container" id="daysContainer">
+                    <button class="day-btn" data-day="MON">MON</button>
+                    <button class="day-btn" data-day="TUE">TUE</button>
+                    <button class="day-btn" data-day="WED">WED</button>
+                    <button class="day-btn" data-day="THU">THU</button>
+                    <button class="day-btn" data-day="FRI">FRI</button>
+                </div>
+                <p class="hint">Leave days unselected to block all dates in the range.</p>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-cancel" onclick="resetForm()">Cancel</button>
+                <button class="btn-confirm" onclick="showConfirmModal()">Block</button>
+            </div>
+        </section>
+
+        <!-- Section 4: Blocked Slots History -->
+        <section class="history-section">
+            <h2 class="title-blue">Blocked Slots History</h2>
+            <div id="historyList">
+                <!-- Data akan masuk sini melalui JS -->
+                <div class="history-card shadow-main">
+                    <div class="history-info">
+                        <p><strong>Start Date - End Date:</strong><br>1 April 2026 - 30 April 2026</p>
+                        <p><strong>Start Time - End Time:</strong><br>11:00 AM - 1:00 PM</p>
+                        <p><strong>Repeated Days:</strong><br>MON, THU, FRI</p>
+                    </div>
+                    <button class="btn-unblock" onclick="showUnblockModal(this)">Unblock</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODALS -->
+    <div id="modalOverlay" class="overlay">
+        <!-- Gambar 2 & 5: Confirm Block / Unblock -->
+        <div id="confirmModal" class="modal card">
+            <h2 id="modalTitle" class="title-dark">Block This Time Slot?</h2>
+            <p id="modalSubtitle" class="subtitle">Set this slot to 'Unavailable' for students.</p>
+            <div class="modal-details">
+                <p>Start Date - End Date:</p>
+                <p class="val" id="valDate">-</p>
+                <p>Start Time - End Time:</p>
+                <p class="val" id="valTime">-</p>
+                <p>Repeated Days:</p>
+                <p class="val" id="valDays">-</p>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-confirm" id="modalActionBtn">Yes</button>
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Gambar 3: Warning Popup -->
+        <div id="warningModal" class="modal card">
+            <h2 class="title-red">Warning</h2>
+            <p class="warning-text">
+                Some slots within the selected range have already been booked by students. 
+                To proceed with blocking this period, please cancel the existing appointments 
+                in the Manage Appointment section first.
+            </p>
+            <div class="action-buttons vertical">
+                <button class="btn-confirm" onclick="location.href='manage.html'">Go to Manage Appointment</button>
+                <button class="btn-cancel" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Generate Time Options (8:00 AM - 5:30 PM)
+        const startSelect = document.getElementById('startTime');
+        const endSelect = document.getElementById('endTime');
+        
+        function populateTimes() {
+            let times = [];
+            let start = 8 * 60; // 8:00 AM in minutes
+            let end = 17.5 * 60; // 5:30 PM in minutes
+
+            for (let i = start; i <= end; i += 30) {
+                let hours = Math.floor(i / 60);
+                let minutes = i % 60;
+                let ampm = hours >= 12 ? 'PM' : 'AM';
+                let displayHours = hours > 12 ? hours - 12 : hours;
+                if(displayHours == 0) displayHours = 12;
+                let timeStr = `${displayHours}:${minutes === 0 ? '00' : '30'} ${ampm}`;
+                times.push(timeStr);
+            }
+
+            times.forEach(t => {
+                startSelect.innerHTML += `<option value="${t}">${t}</option>`;
+                endSelect.innerHTML += `<option value="${t}">${t}</option>`;
+            });
+        }
+
+        // Toggle Days
+        document.querySelectorAll('.day-btn').forEach(btn => {
+            btn.addEventListener('click', () => btn.classList.toggle('active'));
+        });
+
+        function resetForm() {
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('active'));
+        }
+
+        function showConfirmModal() {
+            // Logik simulasi pertembungan (Contoh: jika pilih April, tunjuk warning)
+            const sDate = document.getElementById('startDate').value;
+            if(sDate.includes("-04-")) {
+                openModal('warningModal');
+                return;
+            }
+
+            document.getElementById('valDate').innerText = `${sDate} - ${document.getElementById('endDate').value}`;
+            document.getElementById('valTime').innerText = `${startSelect.value} - ${endSelect.value}`;
+            
+            let selectedDays = Array.from(document.querySelectorAll('.day-btn.active')).map(b => b.dataset.day);
+            document.getElementById('valDays').innerText = selectedDays.length > 0 ? selectedDays.join(', ') : 'All Days';
+            
+            document.getElementById('modalTitle').innerText = "Block This Time Slot?";
+            document.getElementById('modalActionBtn').onclick = finalizeBlock;
+            openModal('confirmModal');
+        }
+
+        function showUnblockModal(btn) {
+            document.getElementById('modalTitle').innerText = "Unblock This Time Slot?";
+            document.getElementById('modalSubtitle').innerText = "Set this slot to 'Available' for students.";
+            document.getElementById('modalActionBtn').onclick = () => {
+                btn.closest('.history-card').remove();
+                closeModal();
+            };
+            openModal('confirmModal');
+        }
+
+        function openModal(id) {
+            document.getElementById('modalOverlay').style.display = 'flex';
+            document.getElementById('confirmModal').style.display = 'none';
+            document.getElementById('warningModal').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }
+
+        function finalizeBlock() {
+            // Simulasi tambah ke history
+            alert("Slot Successfully Blocked!");
+            closeModal();
+            // Anda boleh tambah logik append child di sini untuk history
+        }
+
+        populateTimes();
+    </script>
+</body>
+</html>
