@@ -201,6 +201,11 @@ body {
     color: #ff4d4d;
 }
 
+.slot.blocked {
+    border-color: #eb8213;
+    color: #eb8213;
+}
+
 .scroll-indicator {
     display: flex;
     justify-content: space-around;

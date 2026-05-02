@@ -2,7 +2,6 @@ let selectedLecturer = "";
 let currentWeekOffset = 0;
 let selectedSlotData = {};
 
-// 1. Pilih Lecturer & Tukar ke Page Kalendar (Kekal Asal)
 function selectLecturer(name) {
     selectedLecturer = name;
     document.getElementById('display-lecturer-name').innerText = name;
@@ -11,7 +10,6 @@ function selectLecturer(name) {
     renderCalendar();
 }
 
-// 2. Render Tarikh & Slot Masa (Dengan Logik Real-Time & Had 1 Bulan)
 function renderCalendar() {
     const daysContainer = document.getElementById('calendar-days');
     const slotsContainer = document.getElementById('time-slots');
@@ -20,19 +18,15 @@ function renderCalendar() {
 
     const days = ["MON", "TUE", "WED", "THU", "FRI"];
     
-    // --- LOGIK REAL-TIME START DATE ---
     const today = new Date();
     const currentDay = today.getDay();
-    // Cari Isnin minggu ini
     const diffToMonday = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); 
     const startOfCurrentWeek = new Date(new Date().setDate(diffToMonday));
     startOfCurrentWeek.setHours(0, 0, 0, 0);
 
     const baseDate = new Date(startOfCurrentWeek);
     baseDate.setDate(baseDate.getDate() + (currentWeekOffset * 7));
-    // ----------------------------------
 
-    // Render Header Tarikh
     days.forEach((day, index) => {
         const date = new Date(baseDate);
         date.setDate(date.getDate() + index);
@@ -46,7 +40,6 @@ function renderCalendar() {
         `;
     });
 
-    // Render Masa 8:00 AM - 6:00 PM (setiap 30 minit)
     for (let hour = 8; hour < 18; hour++) {
         for (let min of ["00", "30"]) {
             let period = hour >= 12 ? "PM" : "AM";
@@ -61,24 +54,24 @@ function renderCalendar() {
                 const slotDateTime = new Date(date);
                 slotDateTime.setHours(hour, parseInt(min), 0, 0);
                 const now = new Date();
-
-                // Sekatan Tarikh/Masa Lampau
                 const isPast = slotDateTime < now;
 
-                let isBooked = Math.random() < 0.15; 
-                let statusClass = isBooked ? "booked" : "";
+                // --- LOGIK ADJUSTMENT DI SINI ---
+                let rand = Math.random();
+                let isBooked = rand < 0.15; 
+                let isBlocked = rand >= 0.15 && rand < 0.25; // 10% peluang slot kena block
                 
-                // Tambah visual disabled jika masa sudah lepas
-                if (isPast) {
-                    statusClass += " disabled-slot";
-                }
+                let statusClass = "";
+                if (isBooked) statusClass = "booked";
+                else if (isBlocked) statusClass = "blocked"; // Tambah class blocked
+                
+                if (isPast) statusClass += " disabled-slot";
                 
                 const dateStrFull = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
 
-                // Masukkan isPast ke dalam function call untuk elakkan tempahan retroaktif
                 slotsContainer.innerHTML += `
                     <div class="slot ${statusClass}" 
-                         onclick="openConfirmation('${timeLabel}', '${dateStrFull}', ${isBooked}, ${isPast})"
+                         onclick="openConfirmation('${timeLabel}', '${dateStrFull}', ${isBooked}, ${isPast}, ${isBlocked})"
                          ${isPast ? 'style="opacity: 0.4; cursor: not-allowed;"' : ''}>
                         ${timeLabel}
                     </div>
@@ -88,20 +81,19 @@ function renderCalendar() {
     }
 }
 
-// 3. Arrow Function (Had Dinamik 1 Bulan)
 function changeWeek(direction) {
     const newOffset = currentWeekOffset + direction;
-    // Had 0 (minggu semasa) sehingga 4 minggu ke hadapan (sebulan)
     if (newOffset >= 0 && newOffset <= 4) {
         currentWeekOffset = newOffset;
         renderCalendar();
     }
 }
 
-// 4. Modal Logic
-function openConfirmation(time, date, isBooked, isPast) {
-    if (isPast) return; // Abaikan jika klik pada slot lama
+// Tambah parameter isBlocked kat sini
+function openConfirmation(time, date, isBooked, isPast, isBlocked) {
+    if (isPast) return; 
     if (isBooked) return alert("This slot is already booked!");
+    if (isBlocked) return alert("This slot is blocked by the lecturer!"); // Alert untuk blocked
     
     document.getElementById('confirm-name').innerText = selectedLecturer;
     document.getElementById('confirm-date').innerText = "Date: " + date;
@@ -110,7 +102,6 @@ function openConfirmation(time, date, isBooked, isPast) {
     document.getElementById('modal-confirm').classList.remove('hidden');
 }
 
-// Fungsi pengiraan masa tamat (Kekal Asal)
 function calculateEndTime(startTime) {
     if (startTime.includes("00")) return startTime.replace("00", "30");
     let parts = startTime.split(":");

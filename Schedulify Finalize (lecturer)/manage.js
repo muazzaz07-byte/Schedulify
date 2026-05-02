@@ -59,8 +59,14 @@ function renderCalendar() {
                 // Sekatan Tarikh Lampau
                 const isPast = slotDateTime < now;
 
-                let isBooked = Math.random() < 0.2; 
-                let statusClass = isBooked ? "booked" : "available";
+                // --- LOGIK BARU: STATUS SLOT ---
+                let rand = Math.random();
+                let isBooked = rand < 0.15; 
+                let isBlocked = rand >= 0.15 && rand < 0.25; // Tambah 10% peluang slot blocked
+                
+                let statusClass = "available";
+                if (isBooked) statusClass = "booked";
+                else if (isBlocked) statusClass = "blocked"; // Class baru untuk blocked
                 
                 if (isPast) {
                     statusClass += " disabled-slot";
@@ -68,7 +74,15 @@ function renderCalendar() {
 
                 const dateStrFull = date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'});
 
-                let onClickAttr = (isBooked && !isPast) ? `onclick="openCancelFlow('${timeLabel}', '${dateStrFull}')"` : "";
+                // --- LOGIK ONCLICK ---
+                let onClickAttr = "";
+                if (!isPast) {
+                    if (isBooked) {
+                        onClickAttr = `onclick="openCancelFlow('${timeLabel}', '${dateStrFull}')"`;
+                    } else if (isBlocked) {
+                        onClickAttr = `onclick="alert('This slot is blocked by you!')"`;
+                    }
+                }
 
                 slotsContainer.innerHTML += `
                     <div class="slot ${statusClass}" ${onClickAttr} ${isPast ? 'style="opacity: 0.4; cursor: not-allowed;"' : ''}>
@@ -83,16 +97,13 @@ function renderCalendar() {
 // Navigasi Dinamik (Had 4 Minggu / 1 Bulan)
 function changeWeek(direction) {
     const newOffset = currentWeekOffset + direction;
-    
-    // Had: Tidak boleh ke belakang ( < 0 ) dan tidak boleh lebih 4 minggu ke depan ( <= 4 )
-    // Setiap kali tarikh real-time berubah (minggu depan), minggu ke-5 yang baru akan terbuka secara automatik.
     if (newOffset >= 0 && newOffset <= 4) {
         currentWeekOffset = newOffset;
         renderCalendar();
     }
 }
 
-// --- FUNGSI MODAL ASAL (TIADA PERUBAHAN) ---
+// --- FUNGSI MODAL ASAL (KEKAL) ---
 function openCancelFlow(time, date) {
     document.getElementById('cancel-date').innerText = "Date: " + date;
     document.getElementById('cancel-time').innerText = "Time: " + time;

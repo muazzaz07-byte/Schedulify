@@ -124,9 +124,15 @@ body {
 }
 
 .slot.available { color: #4a627d; }
+
 .slot.booked {
     border-color: #ff4d4d;
     color: #ff4d4d;
+}
+
+.slot.blocked {
+    border-color: #eb8213;
+    color: #eb8213;
 }
 
 .slot:hover {
