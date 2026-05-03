@@ -1,4 +1,3 @@
-/* Guna CSS asal kau di atas, kemudian tambah ini */
 * {
     margin: 0;
     padding: 0;
@@ -200,6 +199,11 @@ body {
 .slot.booked {
     border-color: #ff4d4d;
     color: #ff4d4d;
+}
+
+.slot.blocked {
+    border-color: #eb8213;
+    color: #eb8213;
 }
 
 .scroll-indicator {
