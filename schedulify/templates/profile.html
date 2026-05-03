@@ -24,34 +24,52 @@
     <div class="container">
         <div id="page-profile">
             <h1>Profile</h1>
-            <div class="card">
-                <div class="profile-info">
-                    <span>muazzaz07@gmail.com</span>
-                    <span>Student</span>
-                </div>
-                <div class="divider"></div>
-                <a class="menu-link" onclick="showPage('page-customize')">Customize Profile</a>
-                <div class="divider"></div>
-                <a class="menu-link" onclick="showPage('page-help')">Help Centre</a>
-                <div class="divider"></div>
-                <a class="menu-link" href="{{ url_for('welcome') }}" style="color: #004aad;">Logout</a>
+        <div class="card">
+        <div class="profile-info">
+            <div class="user-details">
+            <h2 class="username" id="display-username">{{ user_name if user_name else "Hariez Muazzaz" }}</h2> 
+            <span class="email">{{ user_email if user_email else "hariez.muazzaz.nor@student.mmu.edu.my" }}</span>
+        </div>
+            <span class="role">Student</span>
+        </div>
+        <div class="divider"></div>
+            <a class="menu-link" onclick="showPage('page-customize')">Customize Profile</a>
+        <div class="divider"></div>
+            <a class="menu-link" onclick="showPage('page-help')">Help Centre</a>
+        <div class="divider"></div>
+            <a class="menu-link" href="{{ url_for('welcome') }}" style="color: #004aad;">Logout</a>
             </div>
         </div>
 
         <div id="page-customize" class="hidden">
             <h1>Customize Profile</h1>
             <div class="card">
-                <h3>Account details</h3>
-                <p style="margin: 15px 0;">Email : muazzaz07@gmail.com</p>
+            <h3>Account details</h3>
+                <!-- Gunakan variable yang sama seperti di halaman utama profile -->
+                <p style="margin: 15px 0;">Email : {{ user_email if user_email else "hariez.muazzaz.nor@student.mmu.edu.my" }}</p>
+                <p style="margin: 15px 0;">Username : {{ user_name if user_name else "Hariez Muazzaz" }}</p>
                 <div class="divider"></div>
                 <h3>Role</h3>
                 <p style="margin: 15px 0;">Student</p>
                 <div class="divider"></div>
                 <h3>Security</h3>
+                <a class="menu-link" onclick="showPage('page-edit-username')">Edit Username</a>
                 <a class="menu-link" onclick="showPage('page-password')">Change Password</a>
                 <a class="menu-link" onclick="showPage('page-security-q')">Update Security Questions</a>
             </div>
         </div>
+
+    <div id="page-edit-username" class="hidden">
+        <h1>Edit Username</h1>
+        <div class="card">
+            <div class="form-group" style="margin-top: 50px; margin-bottom: 50px;">
+                <input type="text" id="input-username" placeholder="New Username">
+            </div>
+            <div style="text-align: right;">
+                <button class="save-btn" onclick="saveUsername()">Save</button>
+            </div>
+        </div>
+    </div>
 
         <div id="page-password" class="hidden">
             <h1>Change Password</h1>
@@ -78,38 +96,26 @@
     <div class="card">
         <h3 style="font-weight: bold; margin-bottom: 20px;">Security</h3>
         
-        <div class="security-item">
-            <div class="faq-question" onclick="toggleSecurityInput(this)">
-                What was your first pet's name? <span>v</span>
-            </div>
-            <div class="security-answer-box">
-                <input type="text" placeholder="Type your answer here...">
-            </div>
+        <div class="form-group">
+            <label for="security-question-select" style="display: block; margin-bottom: 10px; color: #666;">Choose a security question:</label>
+            <select id="security-question-select" style="width: 100%; padding: 10px; border: none; border-bottom: 1px solid #ccc; background: transparent; font-size: 1rem; margin-bottom: 20px;">
+                <option value="" disabled selected>Select a question...</option>
+                <option value="pet">What was your first pet's name?</option>
+                <option value="mother">What is your mother's maiden name?</option>
+                <option value="school">What was the name of your primary school?</option>
+            </select>
         </div>
 
-        <div class="security-item">
-            <div class="faq-question" onclick="toggleSecurityInput(this)">
-                What is your mother's maiden name? <span>v</span>
-            </div>
-            <div class="security-answer-box">
-                <input type="text" placeholder="Type your answer here...">
-            </div>
+        <div class="form-group">
+            <input type="text" id="security-answer" placeholder="Type your answer here..." style="width: 100%; padding: 10px; border: none; border-bottom: 1px solid #ccc; font-size: 1rem;">
         </div>
 
-        <div class="security-item">
-            <div class="faq-question" onclick="toggleSecurityInput(this)">
-                What was the name of your primary school? <span>v</span>
-            </div>
-            <div class="security-answer-box">
-                <input type="text" placeholder="Type your answer here...">
-            </div>
+        <div style="text-align: right; margin-top: 30px;">
+            <button class="save-btn" onclick="saveSecurityQuestion()">Save</button>
         </div>
+        </div>
+    </div>    
 
-        <div style="text-align: right; margin-top: 20px;">
-            <button class="save-btn" onclick="showPage('page-profile')">Save</button>
-        </div>
-    </div>
-</div>
 
         <div id="page-help" class="hidden">
             <div style="background: white; color: #666; padding: 15px; border-radius: 50px; display: inline-block; margin-bottom: 20px;">
@@ -152,16 +158,26 @@
     <script>
         // Fungsi untuk tukar page tanpa refresh
         function showPage(pageId) {
-            // Sembunyikan semua page
-            const pages = ['page-profile', 'page-customize', 'page-password', 'page-security-q', 'page-help'];
-            pages.forEach(id => {
-                document.getElementById(id).classList.add('hidden');
-            });
-            // Tunjukkan page yang dipilih
-            document.getElementById(pageId).classList.remove('hidden');
-            // Scroll ke atas
-            window.scrollTo(0, 0);
+    // Tambah 'page-edit-username' dalam senarai ini
+    const pages = [
+        'page-profile', 
+        'page-customize', 
+        'page-edit-username', // Tambah ini
+        'page-password', 
+        'page-security-q', 
+        'page-help'
+    ];
+    
+    pages.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.classList.add('hidden');
         }
+    });
+
+    document.getElementById(pageId).classList.remove('hidden');
+    window.scrollTo(0, 0);
+}
 
 // Fungsi untuk buka/tutup kotak jawapan security question
 function toggleSecurityInput(element) {
