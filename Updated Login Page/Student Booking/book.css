@@ -1,0 +1,321 @@
+/* --- Base Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Navbar Styling --- */
+.navbar {
+    width: 100%;
+    background: white;
+    padding: 40px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo {
+    color: #004aad;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.nav-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+}
+
+.nav-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    background: #f0f0f0;
+    color: #555;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.nav-buttons button:hover, .nav-buttons button.active {
+    background: #dcdcdc;
+    transform: translateY(-2px);
+}
+
+/* --- Layout Containers --- */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px 20px;
+    text-align: center;
+}
+
+.view { transition: opacity 0.3s ease; }
+.hidden { display: none !important; }
+
+.section-title {
+    font-size: 2.5rem;
+    color: #4a627d;
+    margin-bottom: 40px;
+}
+
+/* --- Step 1: Lecturer Grid --- */
+.lecturer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 50px;
+    border: none;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    font-size: 1.1rem;
+    color: #666;
+    display: flex;
+    flex-direction: column; /* Stack image and name */
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card img {
+    width: 80px;            /* Keep your preferred size */
+    height: 80px;           /* Ensure it's a 1:1 ratio for a square */
+    border-radius: 12px;    /* Smooth edges (rounded corners) */
+    border: none;           /* Removes the blue border seen in the image */
+    object-fit: cover;      /* Prevents image stretching */
+    margin-bottom: 10px;
+}
+
+.card span {
+    font-weight: bold;
+    color: #334155;
+}
+
+/* --- Step 2: Calendar Header & Location --- */
+.lecturer-header-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.breadcrumb { 
+    color: #888; 
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.lecturer-info h2 { 
+    color: #4a627d; 
+    font-size: 2.2rem; 
+    font-weight: bold;
+    margin: 0;
+}
+
+#display-lecturer-location {
+    color: #64748b;         /* Professional grey color */
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 5px;
+    
+    /* REMOVE THESE TO GET RID OF THE LIGHT BOX */
+    background: none;       
+    border: none;
+    padding: 0;
+    display: block;         /* Ensures it stays on its own line */
+}
+
+/* --- Calendar Core --- */
+.calendar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.calendar-card {
+    background: white;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: 20px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: 2px solid #004aad;
+    padding-bottom: 15px;
+}
+
+.day-col h4 { margin: 0; font-size: 1.2rem; color: #334155; }
+.day-col span { font-size: 0.85rem; color: #64748b; }
+
+.time-grid-container {
+    height: 400px;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding-right: 10px;
+}
+
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.slot {
+    border: 1px solid #e2e8f0;
+    padding: 15px 5px;
+    background: white;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    color: #475569;
+    transition: 0.2s;
+}
+
+.slot:hover {
+    border-color: #004aad;
+    background-color: #f0f7ff;
+    transform: translateY(-2px);
+}
+
+.slot.booked {
+    background-color: #fee2e2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+    cursor: not-allowed;
+}
+
+.slot.blocked {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.arrow-btn {
+    background: none;
+    border: none;
+    font-size: 3rem;
+    color: #4a627d;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.arrow-btn:hover { color: #004aad; }
+
+/* --- Modal Styling --- */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); /* Darker backdrop for focus */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.modal-content h1 { font-size: 1.8rem; margin-bottom: 15px; color: #1e293b; }
+#confirm-location { color: #004aad; margin-bottom: 10px; }
+
+.modal-btns {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
+}
+
+.btn-yes {
+    background: #004aad;
+    color: white;
+    border: none;
+    flex: 1;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    flex: 1;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* Ensure the location text actually shows up */
+#display-lecturer-location { 
+    color: #64748b; 
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-top: 5px;
+    background: #f1f5f9; /* Makes it visible */
+    padding: 5px 15px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+.hidden { display: none !important; }
+
+/* Keep your existing navbar and card styles here */
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+body { background-color: #e0e0e0; display: flex; flex-direction: column; align-items: center; }
+.navbar { width: 100%; background: white; padding: 30px 5%; display: flex; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+.container { width: 100%; max-width: 1200px; padding: 20px; text-align: center; }
+.lecturer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+.card { background: white; padding: 30px; border-radius: 50px; cursor: pointer; display: flex; flex-direction: column; align-items: center; }
+.card img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #004aad; margin-bottom: 10px; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal-content { background: white; padding: 40px; border-radius: 25px; width: 450px; text-align: center; }
+
+/* --- Shared Utility --- */
+.btn-effect:active { transform: scale(0.96); }
+.btn-effect:hover { filter: brightness(0.95); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .navbar { padding: 20px; }
+    .calendar-wrapper { flex-direction: column; }
+    .calendar-card { width: 100%; padding: 15px; }
+    .time-grid { gap: 8px; }
+    .modal-content { width: 90%; }
+}
