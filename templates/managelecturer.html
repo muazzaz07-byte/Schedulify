@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Manage Appointments</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='managelecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="active" onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button onclick="location.href='/lecturer/history'">Appointment History</button>
+        <button onclick="location.href='/lecturer/notification'">Notification</button>
+        <button onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button onclick="location.href='/lecturer/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="container">
+    <div class="lecturer-header-container">
+        <div class="lecturer-info">
+            <h2>{{ session.get('username', 'Lecturer Name') }}</h2>
+            <p>{{ lecturer_office or 'Office Location Not Set' }}</p>
+        </div>
+    </div>
+
+    <div class="calendar-outer-wrapper">
+        <button class="nav-arrow left-arrow" onclick="changeWeek(-1)">
+            <div class="arrow-shape-left"></div>
+        </button>
+
+        <div class="calendar-card">
+            <div class="calendar-header" id="calendar-days"></div>
+            <div class="time-grid-scroll">
+                <div class="time-grid" id="time-slots"></div>
+            </div>
+            <div class="bottom-indicators">
+                <span>▼</span><span>▼</span><span>▼</span><span>▼</span><span>▼</span>
+            </div>
+        </div>
+
+        <button class="nav-arrow right-arrow" onclick="changeWeek(1)">
+            <div class="arrow-shape-right"></div>
+        </button>
+    </div>
+
+    <div id="modal-block-init" class="modal hidden">
+        <div class="modal-content">
+            <h1>Block This Time Slot?</h1>
+            <p>Set this slot to 'Unavailable' for students.</p>
+            <div class="details-box">
+                <p id="block-date"></p>
+                <p>{{ lecturer_office }}</p>
+                <p id="block-time"></p>
+            </div>
+            <div class="modal-btns">
+                <button class="btn-yes btn-effect" onclick="openConfirmationAction('block')">Yes</button>
+                <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-final-confirm" class="modal hidden">
+        <div class="modal-content">
+            <h1>Confirmation</h1>
+            <p style="margin-bottom: 40px; margin-top: 10px; line-height: 1.6; color: #666;">
+                Are you confident in your actions?
+            </p>
+            <div class="modal-btns">
+                <button class="btn-yes btn-effect" onclick="finishAction()">Yes</button>
+                <button class="btn-cancel btn-effect" onclick="closeAllModals()">No</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='managelecturer.js') }}"></script>
+</body>
+</html>

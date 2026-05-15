@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Cancellation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cancellation.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="active" onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+        <button onclick="location.href='/notification'">Notification</button>
+        <button onclick="location.href='/feedback'">Feedback</button>
+        <button onclick="location.href='/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="container">
+    <section id="state-1" class="card">
+        <div class="warning-box">
+            <span class="warning-icon">⚠️</span>
+            <p>Please cancel at least <strong>24 hours before</strong> the session to allow other students to book the slot.</p>
+        </div>
+        <hr>
+        
+        <div id="appointment-list-wrapper">
+            {% if user_appointments %}
+                {% for app in user_appointments %}
+                <div class="appointment-item" style="border-bottom: 1px solid #eee; margin-bottom: 10px; padding-bottom: 10px;">
+                    <div class="details">
+                        <p class="label">Appointment with</p>
+                        <h3 class="name" style="color: #004aad;">{{ app.lecturer_name }}</h3>
+                        <p>Date: {{ app.appointment_date }}</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: {{ app.appointment_time }}</p>
+                    </div>
+                    <button class="btn-cancel-trigger" onclick="triggerCancel({{ app.id }})">Cancel Appointment</button>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-msg"><p>No Appointment for this time</p></div>
+            {% endif %}
+        </div>
+
+        <hr>
+        <div class="scroll-arrow"><span>▼</span></div>
+    </section>
+
+    <section id="state-2" class="card hidden">
+        <h2 class="confirm-title">Are you sure you want to cancel?</h2>
+        <div class="reason-container">
+            <textarea class="reason-textarea" id="cancellationReason" placeholder="Reason for cancellation"></textarea>
+            <div class="upload-overlay"><span class="upload-icon">↑</span></div>
+        </div>
+        <div class="action-buttons">
+            <button class="btn-secondary" onclick="showState(1)">No, Keep It</button>
+            <button class="btn-danger" onclick="confirmDelete()">Confirm cancel now</button>
+        </div>
+    </section>
+
+    <section id="state-3" class="card hidden modal-small">
+        <div class="success-content">
+            <h1>Ops, you have cancelled your appointment</h1>
+            <button class="btn-primary" onclick="location.reload()">Okay</button>
+        </div>
+    </section>
+</main>
+
+<script>
+    let selectedId = null;
+
+    function triggerCancel(id) {
+        selectedId = id;
+        document.getElementById('cancellationReason').value = ""; 
+        showState(2); 
+    }
+
+    function confirmDelete() {
+        const reason = document.getElementById('cancellationReason').value;
+        
+        // Use Fetch to tell Flask to delete/cancel the record in MySQL
+        const formData = new FormData();
+        formData.append('appointment_id', selectedId);
+        formData.append('reason', reason);
+
+        fetch('/process_cancellation', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data === "success") {
+                showState(3);
+            } else {
+                alert("Error: " + data);
+            }
+        });
+    }
+
+    function showState(stateNum) {
+        document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
+        document.getElementById('state-' + stateNum).classList.remove('hidden');
+    }
+</script>
+</body>
+</html>

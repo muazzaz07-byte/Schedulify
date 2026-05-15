@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Lecturer Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button onclick="location.href='/lecturer/history'">Appointment History</button>
+        <button onclick="location.href='/lecturer/notification'">Notification</button>
+        <button class="active" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button onclick="location.href='/lecturer/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="content-container">
+    <div id="feedback-form-container">
+        <h1 class="main-title">Feedback</h1>
+        <p class="subtitle">How is your experience as a lecturer on Schedulify?</p>
+
+        <div class="card feedback-card">
+            <div class="rating-container">
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="bad">
+                    <span>😡 (Bad)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="normal">
+                    <span>😐 (Good)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="good">
+                    <span>😊 (So good)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="amazing">
+                    <span>😻 (Very Amazing)</span>
+                </label>
+            </div>
+
+            <div class="input-section">
+                <div class="category-list">
+                    <p class="label-text">Help us improve the system</p>
+                    <ul>
+                        <li>[ System Lag ]</li>
+                        <li>[ Dashboard UI ]</li>
+                        <li>[ Slot Management ]</li>
+                        <li>[ Others ]</li>
+                    </ul>
+                </div>
+                <div class="text-area-wrapper">
+                    <textarea id="feedback-text" placeholder="Tell us more about your experience..."></textarea>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-cancel" onclick="resetForm()">Cancel</button>
+                <button class="btn-submit" onclick="submitFeedback()">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-container" style="display: none;">
+        <div class="card success-card">
+            <h1 class="success-title">Thank you, Sir/Madam! 🚀</h1>
+            <p class="success-text">
+                Your feedback helps us provide a better experience for both lecturers and students. 
+                Our technical team will review your suggestions.
+            </p>
+            <div class="done-wrapper">
+                <button class="btn-done" onclick="location.href='{{ url_for('manage_lecturer') }}'">Done</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function resetForm() {
+        const radios = document.getElementsByName('rating');
+        radios.forEach(radio => radio.checked = false);
+        document.getElementById('feedback-text').value = '';
+    }
+
+    function submitFeedback() {
+        const rating = document.querySelector('input[name="rating"]:checked')?.value;
+        const comment = document.getElementById('feedback-text').value;
+
+        if (!rating || !comment) {
+            alert("Please select a rating and provide a comment!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('rating', rating);
+        formData.append('comment', comment);
+
+        // This fetch calls the Python route to save data to MySQL
+        fetch('/submit_feedback', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data === "success") {
+                document.getElementById('feedback-form-container').style.display = 'none';
+                document.getElementById('success-container').style.display = 'block';
+            } else {
+                alert("Error: " + data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

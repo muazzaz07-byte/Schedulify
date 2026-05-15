@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedulify | Login & Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .form-box { display: none; }
+        .form-box.active { display: block; }
+        .forgot-container { text-align: right; margin-bottom: 15px; margin-top: -10px; }
+        .forgot-link { font-size: 12px; color: #6b7280; text-decoration: none; }
+        .forgot-link:hover { text-decoration: underline; color: #004aad; }
+        .msg-error { color: #dc2626; background: #fee2e2; padding: 10px; border-radius: 5px; font-size: 13px; margin-bottom: 15px; }
+        .msg-success { color: #16a34a; background: #dcfce7; padding: 10px; border-radius: 5px; font-size: 13px; margin-bottom: 15px; }
+        
+        .password-container { position: relative; width: 100%; }
+        .password-container input { width: 100%; padding-right: 40px; }
+        .toggle-password {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            cursor: pointer; color: #6b7280; font-size: 18px; user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p class="msg-{{ 'success' if 'successful' in message.lower() else 'error' }}">
+            {{ message }}
+          </p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="form-box {{ 'active' if active_form != 'register' else '' }}" id="login-form">
+        <form action="{{ url_for('login') }}" method="POST">
+            <h2>Schedulify</h2>
+            <input type="email" name="email" placeholder="Email" required>
+            
+            <div class="password-container">
+                <input type="password" name="password" id="login-pass" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePass('login-pass', this)">👁</span>
+            </div>
+            
+            <div class="forgot-container">
+                <a href="{{ url_for('forgot_password') }}" class="forgot-link">Forgot Password?</a>
+            </div>
+
+            <button type="submit">Login</button>
+            <p>Need an account? <a href="#" onclick="showForm('register-form')">Register</a></p>
+        </form>
+    </div>
+
+    <div class="form-box {{ 'active' if active_form == 'register' else '' }}" id="register-form">
+        <form action="{{ url_for('register') }}" method="POST">
+            <h2>Register</h2>
+            
+            <input type="text" name="name" placeholder="Full Name" value="{{ reg_data.name if reg_data else '' }}" required>
+            <input type="email" name="email" placeholder="Email" value="{{ reg_data.email if reg_data else '' }}" required>
+            
+            <div class="password-container">
+                <input type="password" name="password" id="reg-pass" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePass('reg-pass', this)">👁</span>
+            </div>
+
+            <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px; text-align: left;">Security Question</label>
+            <select name="security_question" required>
+                <option value="" disabled {{ 'selected' if not reg_data or not reg_data.question else '' }}>Select a question</option>
+                <option value="What is your pet's name?" {{ 'selected' if reg_data and reg_data.question == "What is your pet's name?" else '' }}>What is your pet's name?</option>
+                <option value="What is your mother's maiden name?" {{ 'selected' if reg_data and reg_data.question == "What is your mother's maiden name?" else '' }}>What is your mother's maiden name?</option>
+                <option value="What city were you born in?" {{ 'selected' if reg_data and reg_data.question == "What city were you born in?" else '' }}>What city were you born in?</option>
+            </select>
+
+            <input type="text" name="security_answer" placeholder="Your answer" value="{{ reg_data.answer if reg_data else '' }}" required style="margin: 10px 0 20px 0;">
+
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="#" onclick="showForm('login-form')">Login</a></p>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showForm(id) {
+        document.querySelectorAll('.form-box').forEach(box => box.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function togglePass(inputId, icon) {
+        const passInput = document.getElementById(inputId);
+        if (passInput.type === "password") {
+            passInput.type = "text";
+            icon.textContent = "◡";
+        } else {
+            passInput.type = "password";
+            icon.textContent = "👁";
+        }
+    }
+</script>
+</body>
+</html>

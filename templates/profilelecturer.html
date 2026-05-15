@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Lecturer Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+    <style>
+        .hidden { display: none; }
+        .status-banner { padding: 15px; margin: 20px auto; border-radius: 8px; max-width: 800px; text-align: center; font-weight: bold; position: relative; }
+        .status-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .status-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    </style>
+
+    <script>
+        function showPage(pageId) {
+            const pages = ['page-profile', 'page-customize', 'page-password', 'page-security-q', 'page-edit-username', 'page-help', 'page-change-office'];
+            pages.forEach(id => {
+                const p = document.getElementById(id);
+                if (p) p.classList.add('hidden');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.remove('hidden');
+        }
+
+        function togglePasswordVisibility(btn, inputId) {
+            const input = document.getElementById(inputId);
+            input.type = input.type === "password" ? "text" : "password";
+            btn.innerText = input.type === "password" ? "👁" : "◡";
+        }
+
+        window.onload = function() { 
+            // deciding which tab to show based on Python state
+            showPage("{{ active_page or 'page-profile' }}"); 
+        }
+    </script>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button onclick="location.href='/lecturer/history'">Appointment History</button>
+        <button onclick="location.href='/lecturer/notification'">Notification</button>
+        <button onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button class="active" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+    </nav>
+</header>
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="status-banner status-{{ category }}">
+            {{ message }}
+            <span style="float:right; cursor:pointer;" onclick="this.parentElement.style.display='none'">&times;</span>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div id="page-profile">
+        <h1 style="text-align:center; color: #2d3748; margin: 40px 0;">Lecturer Profile</h1>
+        <div class="card">
+            <div class="profile-header-container" style="display: flex; justify-content: space-between; align-items: center;">
+                <div class="user-titles">
+                    <h2 class="username">{{ user.username }}</h2>
+                    <span class="role-text" style="color: #4a5568;">{{ user.role }}</span>
+                </div>
+                <div class="user-email-display">{{ user.email }}</div>
+            </div>
+            <div class="divider" style="margin: 20px 0; border-top: 1px solid #eee;"></div>
+            <div class="profile-menu-actions" style="display: flex; flex-direction: column; gap: 15px;">
+                <a class="menu-link" style="cursor:pointer; color: #004aad;" onclick="showPage('page-customize')">Customize Profile</a>
+                <a class="menu-link" style="cursor:pointer; color: #004aad;" onclick="showPage('page-help')">Help Centre</a>
+                <a class="menu-link logout-link" style="color: red;" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-change-office" class="hidden">
+        <h1 style="text-align:center; color: #2d3748; margin: 40px 0;">Change Office Location</h1>
+        <div class="card">
+            <form action="{{ url_for('profile_lecturer') }}" method="POST">
+                <input type="hidden" name="action" value="update_office">
+                <div class="form-group" style="margin: 30px 0;">
+                    <label style="display:block; margin-bottom:10px; color:#4a5568;">New Office Location:</label>
+                    <input type="text" name="office_location" value="{{ user.office_location or '' }}" required style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+                <div style="text-align: right;">
+                    <button type="submit" class="save-btn" style="padding: 10px 20px;">Save Changes</button>
+                    <button type="button" class="save-btn" onclick="showPage('page-customize')" style="background:#ccc; color:#333; padding: 10px 20px;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    </div>
+</body>
+</html>

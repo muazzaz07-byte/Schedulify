@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reset Password | Schedulify</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .instruction-text { font-size: 14px; color: #6b7280; margin-bottom: 20px; }
+        .question-box { 
+            background: #f3f4f6; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 20px; 
+            border-left: 4px solid #004aad;
+            text-align: left;
+        }
+        .msg-error { color: #d9534f; font-size: 14px; margin-bottom: 15px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-box active">
+            <h2>Reset Password</h2>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <p class="msg-error">{{ message }}</p>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            {% if step == 1 %}
+                <form action="{{ url_for('forgot_password') }}" method="POST">
+                    <input type="hidden" name="form_step" value="1">
+                    <p class="instruction-text">Enter your registered email to find your account.</p>
+                    <input type="email" name="email" placeholder="Email Address" required>
+                    <button type="submit">Next</button>
+                </form>
+
+            {% elif step == 2 %}
+                <form action="{{ url_for('forgot_password') }}" method="POST">
+                    <input type="hidden" name="form_step" value="2">
+                    <div class="question-box">
+                        <strong>Security Question:</strong><br>
+                        {{ session['temp_question'] }}
+                    </div>
+                    <input type="text" name="answer" placeholder="Your Answer" required>
+                    <button type="submit">Verify Answer</button>
+                </form>
+
+            {% elif step == 3 %}
+                <form action="{{ url_for('forgot_password') }}" method="POST">
+                    <input type="hidden" name="form_step" value="3">
+                    <p class="instruction-text">Answer verified. Please enter a new password.</p>
+                    <input type="password" name="new_password" placeholder="New Password" required>
+                    <button type="submit">Update Password</button>
+                </form>
+            {% endif %}
+
+            <p style="margin-top: 20px;">
+                <a href="{{ url_for('index') }}" style="font-size: 13px; color: #004aad; text-decoration: none;">Back to Login</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

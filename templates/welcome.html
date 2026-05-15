@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Better Scheduling</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='welcome.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <h1 class="logo">Schedulify</h1>
+            <a href="#faq-section" class="help-btn" style="text-decoration: none; display: inline-block; text-align: center;">Help Centre</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>Your Success Starts with Better Scheduling.</h2>
+            <p>Schedulify is the all-in-one platform for students and lecturers at MMU to manage consultation slots without the hassle of back-and-forth emails.</p>
+            
+            <div class="hero-buttons">
+                <a href="{{ url_for('index') }}" class="get-started-btn">Get Started</a>
+                <a href="#about" class="btn-sub">Learn more about us ↓</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='image1.png') }}" alt="Scheduling Calendar Concept">
+        </div>
+    </section>
+
+    <section id="about" class="about-section">
+        <h3 class="section-title">About Us</h3>
+        <div class="about-card">
+            <h4>Tired of Waiting in Line?</h4>
+            <p>Traditional walk-in methods often lead to missed appointments. Schedulify solves this by digitizing the entire process for the university community.</p>
+        </div>
+        
+        <div class="about-images">
+            <img src="{{ url_for('static', filename='image2.png') }}" alt="Paper Schedule" class="rounded-img">
+            <img src="{{ url_for('static', filename='image3.png') }}" alt="Digital Booking" class="rounded-img">
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h3>What special features does Schedulify have?</h3>
+        <div class="features-container">
+            <div class="feature-card">
+                <h5>Instant Booking</h5>
+                <p>Browse available time slots and book your consultation in seconds.</p>
+            </div>
+            <div class="feature-card">
+                <h5>Smart Notifications</h5>
+                <p>Get real-time alerts for confirmations and cancellations.</p>
+            </div>
+            <div class="feature-card">
+                <h5>Emergency Requests</h5>
+                <p>Handle last-minute changes with valid supporting evidence.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits-section">
+        <div class="benefits-grid">
+            <div class="benefit-column">
+                <div class="pill-label">Students</div>
+                <ul class="benefit-list">
+                    <li>View lecturer availability 24/7.</li>
+                    <li>Track history of consultations.</li>
+                    <li>Easy cancellation guidelines.</li>
+                </ul>
+            </div>
+            <div class="benefit-column">
+                <div class="pill-label">Lecturers</div>
+                <ul class="benefit-list">
+                    <li>Organize consultation hours efficiently.</li>
+                    <li>Manage requests with one click.</li>
+                    <li>Maintain clear digital records.</li>
+                </ul>
+            </div>
+        </div>
+        <h2 class="schedulify-title">Schedulify</h2>
+    </section>
+
+    <section id="faq-section" class="faq-section">
+        <div class="pill-label faq-pill">FAQs</div>
+        <div class="faq-container">
+            <details class="faq-item">
+                <summary>What is Schedulify? <span class="arrow">v</span></summary>
+                <div class="faq-content">
+                    <p>Schedulify is a centralized web-based appointment system designed for MMU students and lecturers.</p>
+                </div>
+            </details>
+            <details class="faq-item">
+                <summary>How do I book an appointment? <span class="arrow">v</span></summary>
+                <div class="faq-content">
+                    <p>Log in as a student, browse lecturers, and select an open time slot from their calendar.</p>
+                </div>
+            </details>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2026 Schedulify. Empowering Education Through Efficient Scheduling</p>
+    </footer>
+
+</body>
+</html>

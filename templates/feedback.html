@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button onclick="location.href='{{ url_for('cancellation') }}'">Cancellation Appoint</button>
+        <button onclick="location.href='/notification'">Notification</button>
+        <button class="active" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button onclick="location.href='/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="content-container">
+    <div id="feedback-form-container">
+        <h1 class="main-title">Feedback</h1>
+        <p class="subtitle">Help us make Schedulify better!</p>
+
+        <div class="card feedback-card">
+            <div class="rating-container">
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="Bad">
+                    <span>😡 (Bad)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="Good">
+                    <span>😐 (Good)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="So Good">
+                    <span>😊 (So good)</span>
+                </label>
+                <label class="rating-item">
+                    <input type="radio" name="rating" value="Very Amazing">
+                    <span>😻 (Very Amazing)</span>
+                </label>
+            </div>
+
+            <div class="input-section">
+                <div class="category-list">
+                    <p class="label-text">Example of what you want to say</p>
+                    <ul>
+                        <li>[ Bug/Error ]</li>
+                        <li>[ Design/UI ]</li>
+                        <li>[ Suggestion ]</li>
+                        <li>[ Others ]</li>
+                    </ul>
+                </div>
+                <div class="text-area-wrapper">
+                    <textarea id="feedback-text" placeholder="give reason here"></textarea>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-cancel" onclick="resetForm()">Cancel</button>
+                <button class="btn-submit" onclick="submitFeedback()">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="success-container" style="display: none;">
+        <div class="card success-card">
+            <h1 class="success-title">Thank you for your feedback! 🚀</h1>
+            <p class="success-text">
+                We appreciate your help in making Schedulify the best scheduling tool for our campus. 
+                Our team will look into it!
+            </p>
+            <div class="done-wrapper">
+                <button class="btn-done" onclick="location.href='{{ url_for('book') }}'">Done</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function resetForm() {
+        const radios = document.getElementsByName('rating');
+        radios.forEach(radio => radio.checked = false);
+        document.getElementById('feedback-text').value = '';
+    }
+
+    function submitFeedback() {
+        const rating = document.querySelector('input[name="rating"]:checked')?.value;
+        const comment = document.getElementById('feedback-text').value;
+
+        if (!rating || !comment) {
+            alert("Please provide both a rating and a comment!");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('rating', rating);
+        formData.append('comment', comment);
+
+        fetch('/submit_feedback', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data === "success") {
+                document.getElementById('feedback-form-container').style.display = 'none';
+                document.getElementById('success-container').style.display = 'block';
+            } else {
+                alert("Error submitting feedback: " + data);
+            }
+        });
+    }
+</script>
+</body>
+</html>

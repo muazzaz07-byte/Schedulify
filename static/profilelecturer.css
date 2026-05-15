@@ -53,152 +53,90 @@ body {
     transform: translateY(-2px);
 }
 
-        /* Main Content Styling */
-        .container {
-            width: 90%;
+        /* Container Pages */
+        .page {
+            display: none; /* Semua page hidden secara default */
+            width: 100%;
             max-width: 800px;
-            margin: 40px auto;
+            padding: 40px 20px;
             text-align: center;
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            color: #445069;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        .page.active-page {
+            display: block; /* Hanya tunjuk page yang aktif */
         }
 
+        h2.page-title {
+            font-size: 2.2rem;
+            color: #4a5568;
+            margin-bottom: 30px;
+        }
+
+        /* Card Container */
         .card {
             background: white;
-            color: #555;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
             width: 100%;
         }
 
-        /* Profile & Details Styling */
-        .profile-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Selaraskan Role (Student) ke tengah secara vertikal */
-    padding: 10px 0;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.user-details {
-    text-align: left;
-    display: flex;
-    flex-direction: column; /* Susun Username dan Email ke bawah */
-    gap: 5px;
-}
-
-.username {
-    font-size: 1.8rem;
-    color: #445069;
-    font-weight: bold;
-    margin: 0;
-}
-
-.email {
-    font-size: 1.1rem;
-    color: #666;
-    /* Tambah kod di bawah ini */
-    word-break: break-all; /* Ini akan paksa email sambung ke bawah kalau ruang tak cukup */
-    display: inline-block;
-    max-width: 100%; /* Pastikan dia tak makan ruang Role di sebelah */
-}
-
-.role {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: #445069;
-}
-
-        .divider {
-            height: 1px;
-            background: #ccc;
-            margin: 20px 0;
+        /* List & Links Styling */
+        .profile-info h1 { font-size: 2rem; color: #666; margin-bottom: 10px; }
+        .details-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            color: #718096;
+            font-size: 1.1rem;
+            flex-wrap: wrap;
         }
 
-        .menu-link {
+        .action-link {
             display: block;
-            padding: 15px;
+            padding: 20px 0;
             color: #004aad;
             text-decoration: none;
-            font-size: 1.2rem;
             font-weight: 500;
+            font-size: 1.1rem;
+            border-bottom: 1px solid #eee;
             transition: 0.2s;
-            cursor: pointer;
         }
 
-        .menu-link:hover {
-            background: #f9f9f9;
-            border-radius: 10px;
-        }
+        .action-link:hover { background-color: #f9f9f9; }
+        .action-link:last-child { border-bottom: none; }
 
-/* Styling untuk Security Questions dengan Input */
-.security-item {
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.security-answer-box {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-    padding: 0 10px;
-}
-
-.security-item.active .security-answer-box {
-    max-height: 100px; /* Saiz kotak jawapan bila terbuka */
-    padding-bottom: 15px;
-}
-
-.security-answer-box input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #f9f9f9;
-    font-size: 0.95rem;
-}
-
-.security-item .faq-question {
-    border: none; /* Buang border default supaya nampak clean */
-    padding: 15px 10px;
-}
-
-        /* Form Styling */
+        /* Form Controls */
         .form-group {
-            text-align: left;
             margin-bottom: 25px;
+            text-align: center;
         }
 
         .form-group label {
             display: block;
             font-size: 1.3rem;
             font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            color: #4a5568;
         }
 
         input[type="password"], 
         input[type="text"], 
         select {
             width: 100%;
+            max-width: 500px;
             padding: 12px;
             border: none;
             border-bottom: 2px solid #ccc;
             font-size: 1rem;
             outline: none;
             transition: 0.3s;
+            background: transparent;
+            text-align: center;
         }
 
-        input:focus {
-            border-bottom-color: #004aad;
-        }
+        input:focus { border-bottom-color: #004aad; }
 
         .save-btn, .back-btn {
             background: #e0e0e0;
@@ -220,6 +158,7 @@ body {
         }
 
         /* FAQ Styling */
+        .faq-list { margin-top: 20px; }
         .faq-item {
             background: white;
             margin-bottom: 15px;
@@ -231,17 +170,13 @@ body {
 
         .faq-question {
             padding: 15px 30px;
-            color: #666;
+            color: #4a5568;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 1.1rem;
             transition: 0.3s;
-        }
-
-        .faq-question:hover {
-            background: #f8f8f8;
         }
 
         .faq-answer {
@@ -259,5 +194,9 @@ body {
             max-height: 200px;
         }
 
-        /* Utility */
-        .hidden { display: none; }
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 20px; }
+            .card { padding: 20px; }
+            h2.page-title { font-size: 1.8rem; }
+        }

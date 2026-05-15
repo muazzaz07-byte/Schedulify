@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Block Slot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='blocklecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button class="active" onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button onclick="location.href='/lecturer/history'">History</button>
+        <button onclick="location.href='/lecturer/notification'">Notification</button>
+        <button onclick="location.href='/lecturer/feedback'">Feedback</button>
+        <button onclick="location.href='/lecturer/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="container">
+    <section id="block-form-section" class="card">
+        <h1 class="title">Block Slot</h1>
+        <p class="subtitle">Set this slot to 'Unavailable' for students.</p>
+
+        <div class="form-group">
+            <h3 class="group-label">Choose Date</h3>
+            <div class="input-row">
+                <div class="input-field">
+                    <span>Start Date</span>
+                    <input type="date" id="startDate">
+                </div>
+                <span class="separator">-</span>
+                <div class="input-field">
+                    <span>End Date</span>
+                    <input type="date" id="endDate">
+                </div>
+            </div>
+            <p class="hint">Set the same date for both Start and End if blocking only one specific day.</p>
+        </div>
+
+        <div class="form-group">
+            <h3 class="group-label">Choose Time</h3>
+            <div class="input-row">
+                <div class="input-field">
+                    <span>Start Time</span>
+                    <select id="startTime"></select>
+                </div>
+                <span class="separator">-</span>
+                <div class="input-field">
+                    <span>End Time</span>
+                    <select id="endTime"></select>
+                </div>
+            </div>
+            <p class="hint">This time range will apply to every selected date within your range.</p>
+        </div>
+
+        <div class="form-group">
+            <h3 class="group-label">Repeat Days Selected</h3>
+            <div class="days-container">
+                <button type="button" class="day-btn" data-day="MON">MON</button>
+                <button type="button" class="day-btn" data-day="TUE">TUE</button>
+                <button type="button" class="day-btn" data-day="WED">WED</button>
+                <button type="button" class="day-btn" data-day="THU">THU</button>
+                <button type="button" class="day-btn" data-day="FRI">FRI</button>
+            </div>
+            <p class="hint">Leave days unselected to block all dates in the range.</p>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-cancel" onclick="resetForm()">Cancel</button>
+            <button class="btn btn-block" onclick="showConfirmation()">Block</button>
+        </div>
+    </section>
+
+    <section id="confirm-section" class="card hidden">
+        <h1 class="title">Block This Time Slot?</h1>
+        <p class="subtitle">Set this slot to 'Unavailable' for students.</p>
+        
+        <div class="confirm-details">
+            <p>Start Date - End Date:</p>
+            <h2 id="displayDates"></h2>
+            
+            <p>Start Time - End Time:</p>
+            <h2 id="displayTimes"></h2>
+            
+            <p>Repeated Days:</p>
+            <h2 id="displayDays"></h2>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-block" onclick="processBlock()">Yes</button>
+            <button class="btn btn-cancel" onclick="hideConfirmation()">Cancel</button>
+        </div>
+    </section>
+
+    <div id="warning-overlay" class="overlay hidden">
+        <div class="card warning-card">
+            <h1 class="title danger">Warning</h1>
+            <p class="warning-text">
+                Some slots within the selected range have already been booked by students. 
+                To proceed with blocking this period, please cancel the existing appointments 
+                in the Manage Appointment section first.
+            </p>
+            <div class="action-buttons horizontal">
+                <button class="btn btn-block" onclick="location.href='{{ url_for('manage_lecturer') }}'">Go to Manage Appointment</button>
+                <button class="btn btn-cancel" onclick="closeWarning()">Close</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="{{ url_for('static', filename='block.js') }}"></script>
+</body>
+</html>

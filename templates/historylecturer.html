@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Appointment History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='historylecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button class="active" onclick="location.href='{{ url_for('history_lecturer') }}'">Appointment History</button>
+        <button onclick="location.href='/lecturer/notification'">Notification</button>
+        <button onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button onclick="location.href='/lecturer/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="container">
+    <h1 class="page-title">History Appointment</h1>
+
+    <div class="history-card">
+        <div class="column">
+            <div class="status-badge completed">Completed</div>
+            <div class="scroll-area">
+                {% set completed_apps = history|selectattr('status', 'equalto', 'Completed')|list %}
+                {% if completed_apps %}
+                    {% for app in completed_apps %}
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>{{ app.student_name }}</h3>
+                        <p>Date: {{ app.appointment_date }}</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: {{ app.appointment_time }}</p>
+                    </div>
+                    {% if not loop.last %}<hr style="border: 0.5px solid #eee; margin: 10px 0;">{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-text">No appointment for this time</p>
+                {% endif %}
+            </div>
+            <div class="scroll-indicator">▼</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="column">
+            <div class="status-badge cancelled">Cancelled</div>
+            <div class="scroll-area">
+                {% set cancelled_apps = history|selectattr('status', 'equalto', 'Cancelled')|list %}
+                {% if cancelled_apps %}
+                    {% for app in cancelled_apps %}
+                    <div class="appointment-item">
+                        <p>Appointment with</p>
+                        <h3>{{ app.student_name }}</h3>
+                        <p>Date: {{ app.appointment_date }}</p>
+                        <p>Lecturer Room, Block A (Level 3)</p>
+                        <p>Time: {{ app.appointment_time }}</p>
+                        <button class="reason-link" onclick="openModal('{{ 'student' if app.cancelled_by == 'Student' else 'lecturer' }}', '{{ app.reason or 'No reason provided.' }}')">[ click here to read reason ]</button>
+                    </div>
+                    {% if not loop.last %}<hr style="border: 0.5px solid #eee; margin: 10px 0;">{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="empty-text">No appointment for this time</p>
+                {% endif %}
+            </div>
+            <div class="scroll-indicator">▼</div>
+        </div>
+    </div>
+</main>
+
+<div id="reasonModal" class="modal">
+    <div class="modal-content">
+        <h2>Reason</h2>
+        <p class="modal-status">Status: <span id="cancelStatus">Cancelled</span> by <span id="cancelBy">You</span></p>
+        <div class="reason-box">
+            <p id="reasonText"></p>
+        </div>
+        <button class="btn-close" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    function openModal(type, reason) {
+        const modal = document.getElementById('reasonModal');
+        const cancelBy = document.getElementById('cancelBy');
+        const reasonText = document.getElementById('reasonText');
+
+        cancelBy.innerText = (type === 'student') ? 'Student' : 'You';
+        reasonText.innerText = reason;
+        
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('reasonModal').style.display = 'none';
+    }
+</script>
+</body>
+</html>

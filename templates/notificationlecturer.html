@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Lecturer Notifications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notificationlecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button onclick="location.href='{{ url_for('manage_lecturer') }}'">Manage Appointment</button>
+        <button onclick="location.href='{{ url_for('block_lecturer') }}'">Block Slot</button>
+        <button onclick="location.href='{{ url_for('unblock_lecturer') }}'">Manage Blocked Slot</button>
+        <button onclick="location.href='{{ url_for('appointment_lecturer') }}'">My Appointment</button>
+        <button onclick="location.href='/lecturer/history'">Appointment History</button>
+        <button class="active" onclick="location.href='/lecturer/notification'">Notification</button>
+        <button onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button onclick="location.href='/lecturer/profile'">Profile</button>
+    </nav>
+</header>
+
+<main class="content">
+    <h1 class="page-title">Notifications</h1>
+
+    <div class="notification-container">
+        <div class="notification-list">
+            {% if notifications %}
+                {% for notif in notifications %}
+                <div class="notif-card">
+                    <div class="notif-body">
+                        <span class="status-dot {{ notif.category }}"></span>
+                        <p>{{ notif.message }}</p>
+                    </div>
+                    <div class="notif-date">{{ notif.created_at }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: #888; margin-top: 40px;">No new notifications for you, Sir/Madam.</p>
+            {% endif %}
+        </div>
+        
+        <div class="scroll-arrow">▼</div>
+    </div>
+</main>
+
+</body>
+</html>

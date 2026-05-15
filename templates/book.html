@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Book Appointment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='book.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            <button class="active" onclick="location.href='/book'">Book Appointment</button>
+            <button onclick="location.href='/appointments'">My Appointments</button>
+            <button onclick="location.href='/cancellation'">Cancellation Appoint</button>
+            <button onclick="location.href='/notification'">Notification</button>
+            <button onclick="location.href='/feedback'">Feedback</button>
+            <button onclick="location.href='/profile'">Profile</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section id="step-lecturer" class="view">
+            <h2 class="section-title">Select lecturer -</h2>
+            <div class="lecturer-grid">
+                {% if lecturers %}
+                    {% for row in lecturers %}
+                        <button class="card btn-effect" onclick="selectLecturer('{{ row.username }}', '{{ row.office_location or 'Not Set' }}')">
+                            <img src="{{ url_for('static', filename='iconprofile.png') }}" alt="Lecturer">
+                            <span>{{ row.username or row.name }}</span>
+                        </button>
+                    {% endfor %}
+                {% else %}
+                    <p style="text-align: center; grid-column: 1/-1;">No lecturers found.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="step-calendar" class="view hidden">
+            <div class="lecturer-header-container">
+                <p class="breadcrumb">Choose time slot</p>
+                <div class="lecturer-info">
+                    <h2 id="display-lecturer-name"></h2>
+                    <p id="display-lecturer-location"></p>
+                </div>
+            </div>
+
+            <div class="calendar-wrapper">
+                <button class="arrow-btn left btn-effect" onclick="changeWeek(-1)">&#9664;</button>
+                <div class="calendar-card">
+                    <div class="calendar-header" id="calendar-days"></div>
+                    <div class="time-grid-container">
+                        <div class="time-grid" id="time-slots"></div>
+                    </div>
+                </div>
+                <button class="arrow-btn right btn-effect" onclick="changeWeek(1)">&#9654;</button>
+            </div>
+        </section>
+
+        <div id="modal-confirm" class="modal hidden">
+            <div class="modal-content">
+                <h1>Confirm appointment?</h1>
+                <p>You are booking a session with</p>
+                <h3 id="confirm-name" style="color: #004aad;"></h3>
+                <p id="confirm-date"></p>
+                <p id="confirm-location" style="font-weight: bold; color: #4a5568;"></p>
+                <p id="confirm-time"></p>
+                <div class="modal-btns">
+                    <button class="btn-yes btn-effect" onclick="submitBooking()">Yes</button>
+                    <button class="btn-cancel btn-effect" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-success" class="modal hidden">
+            <div class="modal-content">
+                <h1 style="color: #004aad; font-size: 2.5rem;">Success!</h1>
+                <h2 style="margin: 20px 0; color: #334155;">Your appointment is successfully confirmed.</h2>
+                <button class="btn-yes btn-effect" onclick="location.href='/appointments'">Done</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='book.js') }}"></script>
+</body>
+</html>
