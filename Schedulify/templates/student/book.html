@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Book Appointment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+    <script src="{{ url_for('static', filename='book.js') }}"></script>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+        <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="container">
+        <section id="step-lecturer" class="view">
+            <h2 class="section-title">Select lecturer</h2>
+            <div class="lecturer-grid">
+                {% if lecturers %}
+                    {% for lecturer in lecturers %}
+                        <button class="card btn-effect" 
+                                onclick="selectLecturer(this)"
+                                data-name="{{ lecturer.name }}"
+                                data-office="{{ lecturer.office_location if lecturer.office_location else 'No office assigned' }}">
+                            
+                            {% if "Norwahida" in lecturer.name %}
+                                <img src="{{ url_for('static', filename='wahida.png') }}" alt="Lecturer">
+                            {% elif "Willie" in lecturer.name %}
+                                <img src="{{ url_for('static', filename='willie.png') }}" alt="Lecturer">
+                            {% elif "Maisarah" in lecturer.name %}
+                                <img src="{{ url_for('static', filename='maisarah.png') }}" alt="Lecturer">
+                            {% elif "Hazimin" in lecturer.name %}
+                                <img src="{{ url_for('static', filename='hazimin.png') }}" alt="Lecturer">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='iconprofile.png') }}" alt="Lecturer">
+                            {% endif %}
+                            
+                            <span>{{ lecturer.name }}</span>
+                        </button>
+                    {% endfor %}
+                {% else %}
+                    <p style="grid-column: 1 / -1; text-align: center; color: #64748b; font-size: 1.1rem; padding: 40px 0;">No lecturers registered yet.</p>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="step-calendar" class="view hidden">
+            <div class="lecturer-header-container">
+                <p class="breadcrumb" onclick="history.back()" style="cursor: pointer; display: inline-block; color: #004aad; font-weight: 500;">
+                    &#9664; Back to lecturers
+                </p>
+                <div class="lecturer-info">
+                    <h2 id="display-lecturer-name">Select a Lecturer</h2>
+                    <p id="display-lecturer-office">Office Location</p>
+                </div>
+            </div>
+
+            <div class="calendar-top-bar" style="display: flex; justify-content: flex-end; width: 100%; max-width: 900px; margin: 0 auto 12px auto; padding: 0 45px;">
+                <div id="weekly-chances-badge" style="background: white; border: 1px solid #e2e8f0; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.85rem; color: #334155; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: all 0.2s ease;">
+                    Chances left this week: <span id="chances-count-holder" style="color: #004aad; font-weight: bold; font-size: 0.95rem;">5</span> / 5
+                </div>
+            </div>
+
+            <div class="calendar-wrapper">
+                <button class="arrow-btn left btn-effect" onclick="changeWeek(-1)">&#9664;</button>
+                <div class="calendar-card">
+                    <div class="calendar-header" id="calendar-days"></div>
+                    <div class="time-grid-container">
+                        <div class="time-grid" id="time-slots"></div>
+                    </div>
+                    <div class="scroll-indicator">
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                    </div>
+                </div>
+                <button class="arrow-btn right btn-effect" onclick="changeWeek(1)">&#9654;</button>
+            </div>
+        </section>
+
+        <div id="modal-confirm" class="modal hidden">
+            <div class="modal-content">
+                <h1>Confirm appointment?</h1>
+                <p style="margin-bottom: 8px;">You are booking a session with</p>
+                <h3 id="confirm-name" style="color: #004aad; font-weight: bold; font-size: 1.4rem; margin-bottom: 8px;"></h3>
+                <p id="confirm-date" style="margin: 4px 0;"></p>
+                <p id="confirm-office" style="font-weight: 500; color: #4a5568; margin: 4px 0;"></p>
+                <p id="confirm-time" style="margin: 4px 0; font-weight: 500; color: #1e293b;"></p>
+                <div class="modal-btns" style="margin-top: 25px;">
+                    <button class="btn-yes btn-effect" onclick="showSuccess()">Yes</button>
+                    <button class="btn-cancel btn-effect" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-success" class="modal hidden">
+            <div class="modal-content">
+                <h1 style="color: #004aad; font-size: 2.5rem;">Success!</h1>
+                <h2 style="margin: 20px 0; color: #334155;">Your appointment is successfully confirmed.</h2>
+                <p style="margin-bottom: 20px;">To check your appointment approval, click Done</p>
+                <button class="btn-yes btn-effect" onclick="location.href='{{ url_for('appointments') }}'">Done</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        window.addEventListener('popstate', (event) => {
+            const stepLecturer = document.getElementById('step-lecturer');
+            const stepCalendar = document.getElementById('step-calendar');
+            
+            if (stepLecturer && stepCalendar) {
+                stepCalendar.classList.add('hidden');
+                stepLecturer.classList.remove('hidden');
+                if (typeof closeModal === "function") { closeModal(); }
+            }
+        });
+    </script>
+</body>
+</html>

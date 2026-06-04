@@ -1,0 +1,347 @@
+/* ==========================================================================
+   1. GLOBAL ARCHITECTURE & STRUCTURE RESETS
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Screen viewport scroll controller rule lock */
+html, body {
+    overflow-y: hidden !important; 
+    height: 100vh !important;       
+}
+
+/* Container page layout constraints */
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0 20px;
+}
+
+/* ==========================================================================
+   2. MASTER CANVAS PANEL EMBED STYLES
+   ========================================================================== */
+.cancellation-master-card {
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    width: 85%;
+    max-width: 1100px;
+    margin: 30px auto 0 auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.main-title {
+    font-size: 2rem; 
+    color: #1e293b; 
+    margin-bottom: 5px; 
+    font-weight: bold;
+}
+
+.main-subtitle {
+    color: #64748b; 
+    margin-bottom: 25px; 
+    font-size: 1rem;
+}
+
+/* Red 24 hours warning layout bar alert banner */
+.policy-warning-banner {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    color: #c53030;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 35px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   3. 3-COLUMN VERTICAL INTERNAL SCROLL MATRIX CONTAINER
+   ========================================================================== */
+.appointments-grid-container {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); /* STRICT: Guarantees exactly 3 boxes per line horizontally */
+    gap: 25px; 
+    width: 100%; 
+    max-height: 440px;          /* Clips grid view to force vertical scrolling inside white layout box frame */
+    overflow-y: auto;           /* Triggers upward and downward slide swiping */
+    overflow-x: hidden;         /* REMOVED: Completely drops and vanishes horizontal bottom scrollbars */
+    padding: 5px 10px 15px 5px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Smooth customized styling engines for vertical scrolling tracks */
+.appointments-grid-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.appointments-grid-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.appointments-grid-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.appointments-grid-container::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* ==========================================================================
+   4. APPOINTMENT BOX GEOMETRY MODULE CARDS (LARGE PREFERENCES PRESERVED)
+   ========================================================================== */
+.appointment-card {
+    background: #ffffff; 
+    border: 1px solid #e2e8f0; 
+    padding: 25px; 
+    border-radius: 12px; 
+    text-align: left; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    width: 100%;                
+    min-height: 220px;          /* Keeps your large preferred size layout bounds uniform across rows */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.card-inner-content {
+    width: 100%;
+}
+
+.card-header-title {
+    margin: 0 0 10px 0; 
+    color: #1e293b; 
+    font-size: 1.2rem; 
+    font-weight: bold;
+    text-transform: capitalize;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.datetime-detail-text {
+    margin: 6px 0; 
+    font-size: 0.95rem; 
+    color: #475569;
+}
+
+/* --- ADAPTIVE CONDITIONAL CARDS SPECIFIC STATUS TOKENS --- */
+.cancelled-card-theme {
+    background: #f8fafc !important;
+    border: 1px solid #cbd5e1 !important;
+    opacity: 0.7 !important;
+}
+
+.cancelled-badge-tag {
+    font-size: 0.7rem; 
+    background: #e2e8f0; 
+    color: #475569; 
+    padding: 2px 8px; 
+    border-radius: 10px; 
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   5. ACTION CONTROL BUTTON ELEMENTS INTERFACES
+   ========================================================================== */
+.btn-cancel-appointment {
+    margin-top: 20px; 
+    background: #ef4444; 
+    color: white; 
+    border: none; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: background 0.2s; 
+    width: 100%; 
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(239, 68, 68, 0.15);
+}
+
+.btn-cancel-appointment:hover {
+    background: #dc2626;
+}
+
+.btn-cancel-disabled {
+    margin-top: 20px; 
+    background: #cbd5e1; 
+    color: #64748b; 
+    border: none; 
+    padding: 12px 16px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    width: 100%; 
+    text-align: center; 
+    cursor: not-allowed;
+}
+
+/* Fallback empty message placeholder element */
+.empty-state-card {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: #94a3b8;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   6. INTERACTIVE MODAL OVERLAY BACKDROP STYLES
+   ========================================================================== */
+.modal-overlay {
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    background: rgba(0,0,0,0.5); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 9999;
+}
+
+.modal-overlay.hidden { 
+    display: none !important; 
+}
+
+.custom-modal {
+    background: white; 
+    padding: 30px; 
+    border-radius: 15px; 
+    max-width: 480px; 
+    width: 90%; 
+    text-align: center; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.modal-main-heading {
+    color: #1e293b; 
+    margin-bottom: 5px; 
+    font-weight: bold;
+}
+
+.modal-sub-heading {
+    color: #64748b; 
+    font-size: 0.9rem; 
+    margin-bottom: 15px;
+}
+
+.modal-error-banner-label {
+    color: #ef4444; 
+    font-size: 13px; 
+    font-weight: 600; 
+    background: #fff5f5; 
+    border: 1px solid #feb2b2; 
+    padding: 10px; 
+    border-radius: 8px; 
+    margin: 12px 0; 
+    display: none; 
+    text-align: center;
+}
+
+.reason-box { 
+    width: 100%; 
+    height: 100px; 
+    border-radius: 8px; 
+    border: 1px solid #cbd5e1; 
+    padding: 12px; 
+    margin: 15px 0; 
+    resize: none; 
+    font-family: inherit; 
+    font-size: 0.95rem;
+    box-sizing: border-box; 
+    outline: none;
+}
+
+.reason-box:focus {
+    border-color: #004aad;
+    box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.12);
+}
+
+.modal-action-btn-row {
+    display: flex; 
+    gap: 10px; 
+    justify-content: center; 
+    margin-top: 15px;
+}
+
+.btn-proceed-submit {
+    background: #ef4444; 
+    color: white; 
+    border: none; 
+    padding: 11px 22px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-proceed-submit:hover {
+    background: #dc2626;
+}
+
+.btn-proceed-back {
+    background: #e2e8f0; 
+    color: #475569; 
+    border: none; 
+    padding: 11px 22px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-proceed-back:hover {
+    background: #cbd5e1;
+}
+
+/* ==========================================================================
+   7. RESPONSIVE MEDIA BREAKPOINTS MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 950px) {
+    .appointments-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .appointments-grid-container {
+        grid-template-columns: 1fr;
+    }
+    .cancellation-master-card {
+        padding: 25px 15px;
+        width: 95%;
+    }
+}

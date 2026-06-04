@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Reset Password</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+    <style>
+        #password-requirements {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            font-size: 11px;
+            text-align: left;
+        }
+        .req { color: #4a5568; }
+        .req.valid { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">Schedulify</h1>
+        <div class="card">
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="color: #e53e3e; background: #fff5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid #feb2b2;">
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+
+            {% if session.get('reset_email') %}
+                <h2>Create New Password</h2>
+                <form action="{{ url_for('reset') }}" method="POST">
+                    
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" placeholder="New Password" required oninput="validatePassword(this.value)">
+                        <ul id="password-requirements">
+                            <li id="length" class="req">✔ Minimum 8 characters</li>
+                            <li id="capital" class="req">✔ At least 1 capital letter</li>
+                            <li id="number" class="req">✔ At least 1 number</li>
+                            <li id="symbol" class="req">✔ At least 1 symbol (@$!%*?&)</li>
+                        </ul>
+                    </div>
+
+                    <div class="input-group" style="margin-top: 15px;">
+                        <input type="password" name="confirm_password" placeholder="Confirm New Password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" style="margin-top: 15px;">Update Password</button>
+                </form>
+            {% else %}
+                <h2>Reset Password</h2>
+                <div style="text-align: center; margin: 20px 0; color: #4a5568; font-size: 14px;">
+                    <p>Identity verification required before changing password.</p>
+                </div>
+                <button onclick="location.href='{{ url_for('forgot') }}'" class="btn-primary">Go to Identity Verification</button>
+            {% endif %}
+            
+            <p class="footer-text" style="margin-top: 15px;"><a href="{{ url_for('login') }}">Back to Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        function validatePassword(val) {
+            document.getElementById('length').className = val.length >= 8 ? 'req valid' : 'req';
+            document.getElementById('capital').className = /[A-Z]/.test(val) ? 'req valid' : 'req';
+            document.getElementById('number').className = /\d/.test(val) ? 'req valid' : 'req';
+            document.getElementById('symbol').className = /[@$!%*?&]/.test(val) ? 'req valid' : 'req';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Cancellation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cancellation.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}"> 
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+        <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+    </nav>
+</header>
+
+<main class="content">
+    <div class="cancellation-master-card">
+        
+        <h1 class="main-title">Cancel an Appointment</h1>
+        <p class="main-subtitle">Select an active session below to request a cancellation layout track change.</p>
+
+        <div class="policy-warning-banner">
+            ⚠️ <strong>Note:</strong> Cancellation requests must be made at least <strong>24 hours</strong> prior to the scheduled appointment time.
+        </div>
+
+        <div class="appointments-grid-container">
+            {% if bookings %}
+                {% for booking in bookings %}
+                    {% set is_cancelled = booking.status in ['CANCELLED_BY_STUDENT', 'CANCELLED_BY_LECTURER'] %}
+                    
+                    <div class="appointment-card {% if is_cancelled %}cancelled-card-theme{% endif %}">
+                        <div class="card-inner-content">
+                            <h3 class="card-header-title">
+                                With: {{ booking.slot.lecturer.name }}
+                                {% if is_cancelled %}
+                                    <span class="cancelled-badge-tag">Cancelled</span>
+                                {% endif %}
+                            </h3>
+                            <p class="datetime-detail-text">📅 {{ booking.appointment_day }} ({{ booking.appointment_date }})</p>
+                            <p class="datetime-detail-text">⏰ {{ booking.appointment_time }}</p>
+                        </div>
+                        
+                        {% if is_cancelled %}
+                            <button class="btn-cancel-disabled" disabled>
+                                Cancelled
+                            </button>
+                        {% else %}
+                            <button class="btn-cancel-appointment" onclick="openCancellationModal({{ booking.id }})">
+                                Cancel Session
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state-card">
+                    <p>You have no active appointments eligible for cancellation tracking operations.</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</main>
+
+<div id="studentCancelModalOverlay" class="modal-overlay hidden">
+    <div class="custom-modal">
+        <h2 class="modal-main-heading">Cancel This Appointment?</h2>
+        <p class="modal-sub-heading">This action will notify your lecturer immediately regarding this change.</p>
+        
+        <p id="cancel-error-label" class="modal-error-banner-label"></p>
+        
+        <textarea id="studentCancelReasonBox" placeholder="e.g., Medical leave, Timetable clash..." class="reason-box"></textarea>
+        
+        <div class="modal-action-btn-row">
+            <button class="btn-proceed-submit" onclick="processStudentCancellation()">Proceed Cancellation</button>
+            <button class="btn-proceed-back" onclick="closeCancellationModal()">Back</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeBookingIdToCancel = null;
+
+    function openCancellationModal(bookingId) {
+        activeBookingIdToCancel = bookingId;
+        document.getElementById('studentCancelReasonBox').value = '';
+        const errorLabel = document.getElementById('cancel-error-label');
+        if (errorLabel) errorLabel.style.display = 'none';
+
+        document.getElementById('studentCancelModalOverlay').classList.remove('hidden');
+    }
+
+    function closeCancellationModal() {
+        document.getElementById('studentCancelModalOverlay').classList.add('hidden');
+        activeBookingIdToCancel = null;
+    }
+
+    function processStudentCancellation() {
+        if (!activeBookingIdToCancel) return;
+
+        const reasonInput = document.getElementById('studentCancelReasonBox');
+        const errorLabel = document.getElementById('cancel-error-label');
+        const customReasonText = reasonInput ? reasonInput.value.trim() : '';
+
+        if (!customReasonText) {
+            if (errorLabel) {
+                errorLabel.innerText = "⚠️ Please input a valid reason for your lecturer.";
+                errorLabel.style.display = "block";
+            }
+            return;
+        }
+
+        if (errorLabel) errorLabel.style.display = "none";
+
+        const payload = {
+            booking_id: activeBookingIdToCancel,
+            reason: customReasonText
+        };
+
+        fetch('/api/student-cancel-appointment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                window.location.href = "{{ url_for('appointments') }}"; 
+            } else {
+                if (errorLabel) {
+                    errorLabel.innerText = "Error: " + data.message;
+                    errorLabel.style.display = "block";
+                }
+            }
+        })
+        .catch(err => {
+            console.error("Pipeline failure:", err);
+            if (errorLabel) {
+                errorLabel.innerText = "Failed to communicate with database pipeline server.";
+                errorLabel.style.display = "block";
+            }
+        });
+    }
+</script>
+</body>
+</html>

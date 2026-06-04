@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - My Appointments</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='appointments.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}">
+</head> 
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+        <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="content">
+        <h1 class="page-title">My Appointments</h1>
+
+        <div class="main-appointments-box">
+            <div class="appointments-container">
+                {% set active_count = namespace(value=0) %}
+                {% if bookings %}
+                    {% for booking in bookings %}
+                        {% if booking.status == 'CONFIRMED' %}
+                            {% set active_count.value = active_count.value + 1 %}
+                            <div class="appointment-card-active">
+                                <div>
+                                    <h3>With: {{ booking.slot.lecturer.name }}</h3>
+                                    <p class="office-loc">📍 {{ booking.slot.lecturer.office_location if booking.slot.lecturer.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+                                    <div class="time-meta">
+                                        <span>📅 {{ booking.appointment_day }} ({{ booking.appointment_date }})</span>
+                                        <span>⏰ {{ booking.appointment_time }}</span>
+                                    </div>
+                                </div>
+                                <span class="badge-confirmed">Confirmed</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                {% if active_count.value == 0 %}
+                    <div class="empty-active-msg">
+                        <p>You have no active upcoming sessions scheduled.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="history-master-box">
+            <div class="history-matrix-wrapper">
+                
+                <div class="status-column">
+                    <div class="status-badge completed">Completed</div>
+                    <div class="scroll-area">
+                        {% set comp_count = namespace(value=0) %}
+                        {% if bookings %}
+                            {% for booking in bookings %}
+                                {% if booking.status == 'COMPLETED' %}
+                                    {% set comp_count.value = comp_count.value + 1 %}
+                                    <div class="appointment-card-history">
+                                        <p class="label">Appointment with</p>
+                                        <p class="name">{{ booking.slot.lecturer.name }}</p>
+                                        <p class="details">Date: {{ booking.appointment_day }}, {{ booking.appointment_date }}</p>
+                                        <p class="details">📍 {{ booking.slot.lecturer.office_location if booking.slot.lecturer.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+                                        <p class="details">Time: {{ booking.appointment_time }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if comp_count.value == 0 %}
+                            <div class="empty-msg"><p>No completed sessions</p></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="status-column">
+                    <div class="status-badge cancelled">Cancelled</div>
+                    <div class="scroll-area">
+                        {% set cancel_count = namespace(value=0) %}
+                        {% if cancelled_logs %}
+                            {% for log in cancelled_logs %}
+                                {% set cancel_count.value = cancel_count.value + 1 %}
+                                <div class="appointment-card-history">
+                                    <p class="label">Appointment with</p>
+                                    <p class="name">{{ log.slot.lecturer.name }}</p>
+                                    <p class="details">Date: {{ log.appointment_day }}, {{ log.appointment_date }}</p>
+                                    <p class="details">📍 {{ log.slot.lecturer.office_location if log.slot.lecturer.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+                                    <p class="details">Time: {{ log.appointment_time }}</p>
+                                    <p class="reason-link">[ <a href="#" onclick="openCancellationReasonModal('{{ log.status }}', '{{ log.cancel_reason | replace("\x27", "\\\x27") if log.cancel_reason else 'No custom reason provided.' }}')">click here to read reason</a> ]</p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                        {% if cancel_count.value == 0 %}
+                            <div class="empty-msg"><p>No cancelled logs on file</p></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="status-column">
+                    <div class="status-badge absent">Absent</div>
+                    <div class="scroll-area">
+                        {% set absent_count = namespace(value=0) %}
+                        {% if bookings %}
+                            {% for booking in bookings %}
+                                {% if booking.status == 'ABSENT' %}
+                                    {% set absent_count.value = absent_count.value + 1 %}
+                                    <div class="appointment-card-history">
+                                        <p class="label">Appointment with</p>
+                                        <p class="name">{{ booking.slot.lecturer.name }}</p>
+                                        <p class="details">Date: {{ booking.appointment_day }}, {{ booking.appointment_date }}</p>
+                                        <p class="details">📍 {{ booking.slot.lecturer.office_location if booking.slot.lecturer.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+                                        <p class="details">Time: {{ booking.appointment_time }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% if absent_count.value == 0 %}
+                            <div class="empty-msg"><p>No absent history tags</p></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div id="reasonModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Reason</h2>
+            <p id="modalStatus" class="modal-status"></p>
+            <div class="reason-box">
+                <p id="reasonText"></p>
+            </div>
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function openCancellationReasonModal(statusType, systemReasonString) {
+            const modal = document.getElementById('reasonModal');
+            const statusLabel = document.getElementById('modalStatus');
+            const reasonBoxParagraph = document.getElementById('reasonText');
+
+            if (statusType === 'CANCELLED_BY_STUDENT') {
+                statusLabel.innerHTML = 'Status: <span style="color: #ef4444; font-weight: bold;">Cancelled</span> by You';
+            } else {
+                statusLabel.innerHTML = 'Status: <span style="color: #ef4444; font-weight: bold;">Cancelled</span> by Lecturer';
+            }
+            
+            reasonBoxParagraph.innerText = systemReasonString;
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('reasonModal').style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('reasonModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

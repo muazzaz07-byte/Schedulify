@@ -1,0 +1,147 @@
+/* Import font yang kemas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #e5e7eb; /* Warna kelabu cair latar belakang */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.logo {
+    font-size: 72px;
+    font-weight: 800;
+    color: #0047ab; /* Warna biru gelap schedulify */
+    margin-bottom: 20px;
+    text-shadow: 2px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Style untuk dropdown soalan rahsia */
+.select-style {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    background-color: transparent;
+    font-size: 15px;
+    color: #6b7280;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.select-style:focus {
+    border-bottom-color: #0047ab;
+}
+
+/* Memastikan label align ke kiri */
+.input-group label {
+    text-align: left;
+}
+
+h2 {
+    color: #0047ab;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 14px;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+input {
+    width: 100%;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 0;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input::placeholder {
+    color: #9ca3af;
+}
+
+input:focus {
+    border-bottom-color: #0047ab;
+}
+
+.forgot-link {
+    display: block;
+    font-size: 12px;
+    color: #9ca3af;
+    text-decoration: none;
+    margin-top: 8px;
+}
+
+.btn-primary {
+    width: 100%;
+    background-color: #0047ab;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #003580;
+}
+
+/* Style untuk butan yang berfungsi sebagai link */
+.btn-link {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+}
+
+.footer-text {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #9ca3af;
+}
+
+.footer-text a {
+    color: #0047ab;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer-text a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Forgot Password</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="logo">Schedulify</h1>
+        <div class="card">
+            <h2>Forgot your password?</h2>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="color: #e53e3e; background: #fff5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid #feb2b2;">
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('forgot') }}" method="POST">
+                
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email" value="{{ email if email else '' }}" required>
+                </div>
+
+                <div class="input-group">
+                    <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px; text-align: left;">Security Question</label>
+                    <select class="select-style" name="security_question" required>
+                        <option value="" disabled {{ 'selected' if not security_q }}>Select a question</option>
+                        <option value="What is your pet's name?" {{ 'selected' if security_q == "What is your pet's name?" }}>What is your pet's name?</option>
+                        <option value="What is your mother's maiden name?" {{ 'selected' if security_q == "What is your mother's maiden name?" }}>What is your mother's maiden name?</option>
+                        <option value="What city were you born in?" {{ 'selected' if security_q == "What city were you born in?" }}>What city were you born in?</option>
+                    </select>
+                    <input type="text" name="security_answer" placeholder="Your answer" value="{{ security_a if security_a else '' }}" required style="margin-top: 10px;">
+                </div>
+
+                <button type="submit" class="btn-primary">Verify & Reset</button>
+            </form>
+
+            <p class="footer-text"><a href="{{ url_for('login') }}">Back to Login</a></p>
+        </div>
+    </div>
+</body>
+</html>

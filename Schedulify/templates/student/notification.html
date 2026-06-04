@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Notifications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='appointments.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}"> 
+</head>
+    <style>
+        .notifications-master-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            width: 100%;
+            margin: 30px auto;
+            box-sizing: border-box;
+        }
+
+        .notification-list-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 550px;
+            overflow-y: auto;
+            padding-right: 8px;
+            scrollbar-width: thin;
+        }
+
+        .notification-row-item {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            text-align: left;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.01);
+        }
+
+        .notification-left-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-dot-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(0,0,0,0.15);
+        }
+
+        .notification-text-message {
+            color: #334155;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .notification-date-badge {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .empty-notifications-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #94a3b8;
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+        <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="content" style="max-width: 1000px; margin: 0 auto; padding: 0 20px;">
+        <h1 class="page-title" style="margin: 30px 0; text-align: center; color: #1e293b; font-weight: bold; font-size: 2.3rem;">Notifications</h1>
+
+        <div class="notifications-master-card">
+            <div class="notification-list-wrapper">
+                {% if notifications %}
+                    {% for item in notifications %}
+                        <div class="notification-row-item">
+                            <div class="notification-left-content">
+                                <div class="status-dot-indicator" style="background-color: {{ item.dot_color }};"></div>
+                                <p class="notification-text-message">{{ item.message }}</p>
+                            </div>
+                            <div class="notification-date-badge">
+                                {{ item.date }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-notifications-state">
+                        <p>Your inbox is clear! No active notifications or reminders at this time.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

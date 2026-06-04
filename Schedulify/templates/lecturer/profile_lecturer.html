@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Profile</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='profile_lecturer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar_lecturer.css') }}">
+    <script src="{{ url_for('static', filename='profile_lecturer.js') }}"></script>
+    <style>
+        /* CSS to position the eye visibility icon correctly inside input groups */
+        .password-toggle-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .password-toggle-group input {
+            width: 100%;
+            padding-right: 40px !important; /* Prevent text overlapping with the icon */
+        }
+        .toggle-btn {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .toggle-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #6b7280;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'manage' %}active{% endif %}" onclick="location.href='{{ url_for('manage') }}'">Manage Appointment</button>
+        <button class="{% if request.endpoint == 'block' %}active{% endif %}" onclick="location.href='{{ url_for('block') }}'">Block Slot</button>
+        <button class="{% if request.endpoint == 'manage_blocked' %}active{% endif %}" onclick="location.href='{{ url_for('manage_blocked') }}'">Manage Blocked Slot</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointment</button>
+        <button class="{% if request.endpoint == 'history' %}active{% endif %}" onclick="location.href='{{ url_for('history') }}'">Appointment History</button>
+        <button class="{% if request.endpoint == 'notifications_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('notifications_lecturer') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+    </nav>
+</header>
+
+<section id="page-profile" class="page" style="display: block;">
+        <h1 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Profile</h1>
+        
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div style="color: {{ '#155724' if 'successfully' in message else '#e53e3e' }}; 
+                              background: {{ '#d4edda' if 'successfully' in message else '#fff5f5' }}; 
+                              padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; 
+                              border: 1px solid {{ '#c3e6cb' if 'successfully' in message else '#feb2b2' }}; font-weight: 500;">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <div style="position: relative; margin-bottom: 25px;">
+                <h2 style="font-size: 28px; color: #2d3748; font-weight: bold; margin-bottom: 5px;">{{ user.name }}</h2>
+                <p style="color: #718096; font-size: 16px;">{{ user.email }}</p>
+                <span style="position: absolute; right: 0; top: 10px; color: #4a5568; font-weight: bold; font-size: 16px; text-transform: capitalize;">{{ user.role }}</span>
+            </div>
+            
+            <hr style="border: 0; border-top: 1px solid #e2e8f0; margin-bottom: 25px;">
+            
+            <div style="text-align: center; display: flex; flex-direction: column; gap: 20px;">
+                <a href="#" class="action-link" style="color: #0056b3; text-decoration: none; font-size: 18px; font-weight: 600;" onclick="showPage('page-customize')">Customize Profile</a>
+                <hr style="border: 0; border-top: 1px solid #edf2f7; width: 100%;">
+                
+                <a href="#" class="action-link" style="color: #0056b3; text-decoration: none; font-size: 18px; font-weight: 600;" onclick="showPage('page-help')">Help Centre</a>
+                <hr style="border: 0; border-top: 1px solid #edf2f7; width: 100%;">
+                
+                <a href="{{ url_for('logout') }}" class="action-link" style="color: #0056b3; text-decoration: none; font-size: 18px; font-weight: 600;">Logout</a>
+            </div>
+        </div>
+    </section>
+
+<section id="page-customize" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Customize Profile</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <h3 style="color: #4a5568; margin-bottom: 20px;">Account details</h3>
+            <p style="color: #718096; margin-bottom: 5px;">Email : {{ user.email }}</p>
+            <p style="color: #718096; text-transform: capitalize; margin-bottom: 15px;">Role : {{ user.role }}</p>
+            
+            <h3 style="color: #4a5568;">Office Location</h3>
+            <p style="color: #718096; margin: 10px 0;">{{ user.office_location if user.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+            <a href="#" class="action-link" onclick="showPage('page-change-office')" style="display: block; margin-bottom: 15px;">Change Office Location</a>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+            <a href="#" class="action-link" onclick="showPage('page-edit-username')" style="display: block; margin-bottom: 10px;">Edit Username</a>
+            <a href="#" class="action-link" onclick="showPage('page-change-password')" style="display: block; margin-bottom: 10px;">Change Password</a>
+            <a href="#" class="action-link" onclick="showPage('page-security-questions')" style="display: block; margin-bottom: 15px;">Update Security Questions</a>
+            <div style="text-align: right; margin-top: 20px;">
+                <button class="back-btn" onclick="showPage('page-profile')">Back</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="page-edit-username" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Edit Username</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
+            <form action="{{ url_for('update_username') }}" method="POST">
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" name="username" placeholder="Enter new username" value="{{ user.name }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; text-align: center;">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button type="button" class="back-btn" onclick="showPage('page-customize')" style="background: #e2e8f0; color: #4a5568; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer;">Cancel</button>
+                    <button type="submit" class="save-btn" style="background: #0046ad; color: white; border: none; padding: 10px 30px; border-radius: 20px; cursor: pointer; font-weight: bold;">Save</button>
+                </div>
+            </form>
+            
+        </div>
+    </section>
+
+<section id="page-change-office" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Change Office Location</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
+            <form action="{{ url_for('update_office_location') }}" method="POST">
+                <div class="form-group">
+                    <input type="text" name="office_location" placeholder="Enter new office location" value="{{ user.office_location if user.office_location else '' }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="button" class="back-btn" onclick="showPage('page-customize')" style="background: #e2e8f0; color: #4a5568; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Cancel</button>
+                    <button type="submit" class="save-btn" style="background: #0046ad; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer;">Save</button>
+                </div>
+            </form>
+            
+        </div>
+    </section>
+
+<section id="page-change-password" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Change Password</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                {% for message in messages %}
+                  <div style="color: {{ '#155724' if 'successfully' in message else '#e53e3e' }}; 
+                              background: {{ '#d4edda' if 'successfully' in message else '#fff5f5' }}; 
+                              padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; 
+                              border: 1px solid {{ '#c3e6cb' if 'successfully' in message else '#feb2b2' }}; font-weight: 500;">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('update_security') }}" method="POST">
+                <div class="form-group password-toggle-group">
+                    <input type="password" name="current_password" id="lecturer_current_password" placeholder="Current Password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+                    <button type="button" class="toggle-btn" onclick="toggleField('lecturer_current_password', this)" tabindex="-1">
+                        <svg viewBox="0 0 24 24" class="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </button>
+                </div>
+                <div class="form-group password-toggle-group">
+                    <input type="password" name="password" id="lecturer_new_password" placeholder="New Password" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+                    <button type="button" class="toggle-btn" onclick="toggleField('lecturer_new_password', this)" tabindex="-1">
+                        <svg viewBox="0 0 24 24" class="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </button>
+                </div>
+                <div class="form-group password-toggle-group">
+                    <input type="password" name="confirm_password" id="lecturer_confirm_password" placeholder="Confirm Password" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box;">
+                    <button type="button" class="toggle-btn" onclick="toggleField('lecturer_confirm_password', this)" tabindex="-1">
+                        <svg viewBox="0 0 24 24" class="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                    </button>
+                </div>
+                <button type="submit" class="save-btn" style="margin-top: 10px;">Save</button>
+            </form>
+        </div>
+    </section>
+
+<section id="page-security-questions" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Update Security Questions</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            
+            <form action="{{ url_for('update_security_questions') }}" method="POST">
+                <div class="form-group">
+                    <select name="security_question" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; background: transparent;">
+                        <option value="" disabled {{ 'selected' if not user.security_question }}>Select a question</option>
+                        <option value="What is your pet's name?" {{ 'selected' if user.security_question == "What is your pet's name?" }}>What is your pet's name?</option>
+                        <option value="What is your mother's maiden name?" {{ 'selected' if user.security_question == "What is your mother's maiden name?" }}>What is your mother's maiden name?</option>
+                        <option value="What city were you born in?" {{ 'selected' if user.security_question == "What city were you born in?" }}>What city were you born in?</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" name="security_answer" placeholder="Your Answer" value="{{ user.security_answer if user.security_answer else '' }}" required style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px;">
+                </div>
+                <button type="submit" class="save-btn" style="margin-top: 10px;">Save</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="page-help" class="page" style="display: none;">
+        <h2 class="page-title" style="text-align: center; font-size: 36px; margin: 30px 0 10px 0; color: #4a5568; font-weight: bold;">Help Centre FAQs</h2>
+        <div class="card" style="max-width: 600px; margin: 0 auto; padding: 40px; border-radius: 15px; background: white; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <p style="color: #4a5568; margin-bottom: 10px; font-weight: bold;">What is Schedulify?</p>
+            <p style="color: #718096; margin-bottom: 20px; font-size: 14px;">Schedulify is an appointment system designed specifically for staff and students to organize consultation slots.</p>
+            <button class="back-btn" onclick="showPage('page-profile')">Back</button>
+        </div>
+    </section>
+
+    <script>
+        function showPage(pageId) {
+            const sections = document.querySelectorAll('.page');
+            sections.forEach(sec => {
+                sec.style.display = 'none';
+            });
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.style.display = 'block';
+            }
+        }
+
+        // JavaScript function to handle password visibility toggling cleanly
+        function toggleField(inputId, btnElement) {
+            const field = document.getElementById(inputId);
+            const svgElement = btnElement.querySelector('.eye-icon');
+            const eyeOpen = "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z";
+            const eyeClosed = "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.82l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.74-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.01-.17c0-1.66-1.34-3-3-3l-.16.02z";
+
+            if (field.type === 'password') {
+                field.type = 'text';
+                svgElement.innerHTML = `<path d="${eyeClosed}"/>`;
+            } else {
+                field.type = 'password';
+                svgElement.innerHTML = `<path d="${eyeOpen}"/>`;
+            }
+        }
+
+
+window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const activeTab = urlParams.get('tab');
+        
+        if (activeTab === 'password') {
+            showPage('page-change-password');
+        } else if (activeTab === 'security-q') {
+            showPage('page-security-questions');
+        } else if (activeTab === 'office') {
+            showPage('page-customize'); // Keeps them on the customize sub-menu dashboard view
+        }
+    });
+
+
+    </script>
+</body>
+</html>
