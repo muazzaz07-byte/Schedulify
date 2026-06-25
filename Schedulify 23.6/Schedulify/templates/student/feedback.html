@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='feedback.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}"> </head>
+    <style>
+        /* Selection styles for items */
+        .category-list ul li {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            list-style: none;
+        }
+        .category-list ul li:hover {
+            background-color: #f1f5f9;
+        }
+        .category-list ul li.selected-category {
+            background-color: #004aad !important;
+            color: white !important;
+            font-weight: bold;
+        }
+        .rating-item {
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .rating-item:hover {
+            background-color: #f8fafc;
+        }
+        .rating-item input[type="radio"] {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+        <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+        <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="content-container">
+        <div id="feedback-form-container">
+            <h1 class="main-title">Feedback</h1>
+            <p class="subtitle">Help us make Schedulify better!</p>
+
+            <div class="card feedback-card">
+                <div class="rating-container">
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="Bad">
+                        <span>😡 (Bad)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="Good">
+                        <span>😐 (Good)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="So good">
+                        <span>😊 (So good)</span>
+                    </label>
+                    <label class="rating-item">
+                        <input type="radio" name="rating" value="Very Amazing">
+                        <span>😻 (Very Amazing)</span>
+                    </label>
+                </div>
+
+                <div class="input-section">
+                    <div class="category-list">
+                        <p class="label-text">Example of what you want to say</p>
+                        <ul id="category-selector-list">
+                            <li onclick="selectCategory('Bug/Error', this)">[ Bug/Error ]</li>
+                            <li onclick="selectCategory('Design/UI', this)">[ Design/UI ]</li>
+                            <li onclick="selectCategory('Suggestion', this)">[ Suggestion ]</li>
+                            <li onclick="selectCategory('Others', this)">[ Others ]</li>
+                        </ul>
+                    </div>
+                    <div class="text-area-wrapper">
+                        <textarea id="feedback-text" placeholder="give reason here"></textarea>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn-cancel" onclick="resetForm()">Cancel</button>
+                    <button class="btn-submit" onclick="transmitFeedbackToServer()">Submit Feedback</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="success-container" style="display: none;">
+            <div class="card success-card">
+                <h1 class="success-title">Thank you for your feedback! 🚀</h1>
+                <p class="success-text">
+                    We appreciate your help in making Schedulify the best scheduling tool for our campus. 
+                    Our team will look into it!
+                </p>
+                <div class="done-wrapper">
+                    <button class="btn-done" onclick="location.href='{{ url_for('book') }}'">Done</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let chosenCategoryString = "";
+
+        function selectCategory(categoryValue, element) {
+            document.querySelectorAll('#category-selector-list li').forEach(li => {
+                li.classList.remove('selected-category');
+            });
+            element.classList.add('selected-category');
+            chosenCategoryString = categoryValue;
+        }
+
+        function resetForm() {
+            const radios = document.getElementsByName('rating');
+            radios.forEach(radio => radio.checked = false);
+            document.getElementById('feedback-text').value = '';
+            document.querySelectorAll('#category-selector-list li').forEach(li => {
+                li.classList.remove('selected-category');
+            });
+            chosenCategoryString = "";
+        }
+
+        function transmitFeedbackToServer() {
+            const selectedRatingRadio = document.querySelector('input[name="rating"]:checked');
+            const reasonTextValue = document.getElementById('feedback-text').value.trim();
+
+            if (!selectedRatingRadio) { alert("Please select a rating emoji expression above first."); return; }
+            if (!chosenCategoryString) { alert("Please pick a category from the selection list."); return; }
+            if (!reasonTextValue) { alert("Please write your feedback details."); return; }
+
+            const payload = {
+                rating: selectedRatingRadio.value,
+                category: chosenCategoryString,
+                reason: reasonTextValue
+            };
+
+            fetch('/api/submit-feedback', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Hide form and show the static thank you screen cleanly
+                    document.getElementById('feedback-form-container').style.display = 'none';
+                    document.getElementById('success-container').style.display = 'block';
+                    resetForm();
+                } else {
+                    alert("Submission Error: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Network issue. Failed to connect with server.");
+            });
+        }
+    </script>
+</body>
+</html>

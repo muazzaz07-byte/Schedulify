@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Notifications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='notification_lecturer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar_lecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'manage' %}active{% endif %}" onclick="location.href='{{ url_for('manage') }}'">Manage Appointment</button>
+        <button class="{% if request.endpoint == 'block' %}active{% endif %}" onclick="location.href='{{ url_for('block') }}'">Block Slot</button>
+        <button class="{% if request.endpoint == 'manage_blocked' %}active{% endif %}" onclick="location.href='{{ url_for('manage_blocked') }}'">Manage Blocked Slot</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointment</button>
+        <button class="{% if request.endpoint == 'history' %}active{% endif %}" onclick="location.href='{{ url_for('history') }}'">Appointment History</button>
+        <button class="{% if request.endpoint == 'notifications_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('notifications_lecturer') }}'" style="position: relative !important;">
+    Notification
+    {% if session.get('lecturer_has_unread_notif') == True %}
+        <span class="nav-notif-badge" style="position: absolute !important; top: 4px !important; right: 4px !important; width: 8px !important; height: 8px !important; background-color: #ef4444 !important; border-radius: 50% !important; box-shadow: 0 0 6px #ef4444 !important; display: block !important; z-index: 999 !important;"></span>
+    {% endif %}
+</button>
+        <button class="{% if request.endpoint == 'feedback_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="content">
+        <h1 class="page-title">Notifications</h1>
+
+        <div class="notification-container">
+            <div class="notification-list">
+                {% if notifications %}
+                    {% for alert in notifications %}
+                        <div class="notif-card">
+                            <div class="notif-body">
+                                <span class="status-dot" style="background-color: {{ alert.dot_color }}; display: inline-block; width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;"></span>
+                                <p>{{ alert.message }}</p>
+                            </div>
+                            <div class="notif-date">{{ alert.date }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="notif-card" style="justify-content: center; padding: 40px;">
+                        <p style="color: #94a3b8; font-style: italic; text-align: center;">You have no active notification updates logged at this time.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="scroll-arrow">▼</div>
+        </div>
+    </main>
+
+</body>
+</html>

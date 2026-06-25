@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Contact Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='contact.css') }}?v=3.0">
+    
+    {% if session.get('role') == 'lecturer' %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='navbar_lecturer.css') }}?v=3.0">
+    {% else %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='navbar.css') }}?v=3.0">
+    {% endif %}
+    
+    <style>
+        /* Emergency Layout Fixes Overrides */
+        html, body {
+            overflow-y: auto !important;
+            min-height: 100vh !important;
+            height: auto !important;
+            background-color: #f1f5f9 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo">Schedulify</div>
+        <nav class="nav-buttons">
+            {% if session.get('role') == 'lecturer' %}
+                <button class="{% if request.endpoint == 'manage' %}active{% endif %}" onclick="location.href='{{ url_for('manage') }}'">Manage Appointment</button>
+                <button class="{% if request.endpoint == 'block' %}active{% endif %}" onclick="location.href='{{ url_for('block') }}'">Block Slot</button>
+                <button class="{% if request.endpoint == 'manage_blocked' %}active{% endif %}" onclick="location.href='{{ url_for('manage_blocked') }}'">Manage Blocked Slot</button>
+                <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointment</button>
+                <button class="{% if request.endpoint == 'history' %}active{% endif %}" onclick="location.href='{{ url_for('history') }}'">Appointment History</button>
+                <button class="{% if request.endpoint == 'notifications_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('notifications_lecturer') }}'">Notification</button>
+                <button class="{% if request.endpoint == 'feedback_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+                <button class="{% if request.endpoint == 'profile_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+            {% else %}
+                <button class="{% if request.endpoint == 'book' %}active{% endif %}" onclick="location.href='{{ url_for('book') }}'">Book Appointment</button>
+                <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointments</button>
+                <button class="{% if request.endpoint == 'cancellation' %}active{% endif %}" onclick="location.href='{{ url_for('cancellation') }}'">Cancel Appointment</button>
+                <button class="{% if request.endpoint == 'notification' %}active{% endif %}" onclick="location.href='{{ url_for('notification') }}'">Notification</button>
+                <button class="{% if request.endpoint == 'feedback' %}active{% endif %}" onclick="location.href='{{ url_for('feedback') }}'">Feedback</button>
+                <button class="{% if request.endpoint == 'profile' %}active{% endif %}" onclick="location.href='{{ url_for('profile') }}'">Profile</button>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="container">
+        
+        <section class="card">
+            <div class="card-header">Get In Touch With Us Now</div>
+            <div class="info-grid">
+                <div class="info-box">
+                    <i class="fa-solid fa-phone"></i>
+                    <h3>Phone Number</h3>
+                    <p>+6018-329 3867</p>
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-envelope"></i>
+                    <h3>Email</h3>
+                    <p>schedulify@gmail.com</p>
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <h3>Location</h3>
+                    <p>Faculty of Computing and Informatics (FCI)
+                    Multimedia University (MMU)
+                    Persiaran Multimedia, 63100 Cyberjaya,
+                    Selangor, Malaysia.</p>
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Working Hours</h3>
+                    <p>Monday To Friday
+                    08:00 AM To 06:00 PM</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">Contact Us</div>
+            <form class="contact-form" id="contactForm" action="https://formspree.io/f/xeebqrjn" method="POST">
+                <div class="form-group">
+                    <input type="text" id="firstName" name="First Name" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="lastName" name="Last Name" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="mobileNo" name="Mobile No" placeholder="Mobile No" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" name="_replyto" placeholder="Email" required>
+                </div>
+                <div class="form-group full-width">
+                    <textarea id="message" name="Message" placeholder="Message" required></textarea>
+                </div>
+                
+                <input type="hidden" name="_subject" value="New Schedulify Contact Us Submission!">
+                
+                <div class="submit-container">
+                    <button type="button" class="btn-submit" onclick="showConfirmation()">Submit</button>
+                </div>
+            </form>
+        </section>
+
+    </main>
+
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <h2>Confirmation</h2>
+            <p>Are you confident in your actions?</p>
+            <div class="modal-buttons">
+                <button class="btn-modal btn-yes" onclick="submitFormToEmail()">Yes</button>
+                <button class="btn-modal btn-no" onclick="closeModal('confirmModal')">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="thankYouModal">
+        <div class="modal-box">
+            <h2>Thank you for Contact Us 🚀</h2>
+            <p>We appreciate your help in making Schedulify the best scheduling tool for our campus. Our team will look into it!</p>
+            <button class="btn-modal btn-done" onclick="closeModal('thankYouModal')">Done</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='contact.js') }}"></script>
+
+    <script>
+        function showConfirmation() {
+            const form = document.getElementById('contactForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            const confirmModal = document.getElementById('confirmModal');
+            if (confirmModal) {
+                confirmModal.classList.add('active');
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function submitFormToEmail() {
+            closeModal('confirmModal');
+            
+            const form = document.getElementById('contactForm');
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: form.method,
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    const thankYouModal = document.getElementById('thankYouModal');
+                    if (thankYouModal) {
+                        thankYouModal.classList.add('active');
+                    }
+                    form.reset();
+                } else {
+                    alert("Submission configuration error. Please verify your Formspree endpoint.");
+                }
+            })
+            .catch(error => {
+                console.error("Pipeline failure context mapping:", error);
+                alert("Network error. Could not send data parameters.");
+            });
+        }
+    </script>
+</body>
+</html>
