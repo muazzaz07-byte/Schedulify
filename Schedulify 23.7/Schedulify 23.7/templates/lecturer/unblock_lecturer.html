@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Manage Blocked Slot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='unblock_lecturer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar_lecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'manage' %}active{% endif %}" onclick="location.href='{{ url_for('manage') }}'">Manage Appointment</button>
+        <button class="{% if request.endpoint == 'block' %}active{% endif %}" onclick="location.href='{{ url_for('block') }}'">Block Slot</button>
+        <button class="{% if request.endpoint == 'manage_blocked' %}active{% endif %}" onclick="location.href='{{ url_for('manage_blocked') }}'">Manage Blocked Slot</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointment</button>
+        <button class="{% if request.endpoint == 'history' %}active{% endif %}" onclick="location.href='{{ url_for('history') }}'">Appointment History</button>
+        <button class="{% if request.endpoint == 'notifications_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('notifications_lecturer') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="card main-history-card">
+        <h1 class="title">Blocked Slots History</h1>
+        
+        <div id="slots-container">
+        {% for slot in blocked_slots %}
+            <div class="slot-item" id="slot-{{ slot.slot_id }}">
+                <div class="slot-details">
+                    <p>Start Date - End Date:</p>
+                    <h3>{{ slot.start_date }} - {{ slot.end_date }}</h3>
+                    <p>Start Time - End Time:</p>
+                    <h3>{{ slot.start_time }} - {{ slot.end_time }}</h3>
+                    <p>Repeated Days:</p>
+                    <h3>{{ slot.days }}</h3>
+                </div>
+                <button class="btn btn-unblock" onclick="confirmUnblock('{{ slot.slot_id }}')">Unblock</button>
+            </div>
+        {% else %}
+            <div id="empty-state">
+                <p class="empty-text">No Blocked Slot for this time</p>
+            </div>
+        {% endfor %}
+        </div>
+    </section>
+
+    <div id="unblock-overlay" class="overlay hidden">
+        <div class="card warning-card">
+            <h1 class="title">Unblock This Time Slot?</h1>
+            <p class="subtitle">Set this slot to 'Available' for students.</p>
+            
+            <div class="confirm-info">
+                <p>Start Date - End Date:</p>
+                <h2 id="modalDate">-</h2>
+                <p>Start Time - End Time:</p>
+                <h2 id="modalTime">-</h2>
+                <p>Repeated Days:</p>
+                <h2 id="modalDays">-</h2>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-yes" onclick="executeUnblock()">Yes</button>
+                <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="system-notification-modal" class="overlay hidden">
+        <div class="card system-modal-card">
+            <h1 id="system-modal-title" class="title">Notification</h1>
+            <p id="system-modal-message">Message text placeholder...</p>
+            <div class="action-buttons">
+                <button id="system-modal-btn" class="btn btn-yes" onclick="closeSystemModal()">OK</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentSlotId = null;
+
+    // 1. Opens confirmation overlay popup modal
+    function confirmUnblock(slotId) {
+        currentSlotId = slotId;
+        const slotElement = document.getElementById(`slot-${slotId}`);
+        
+        if (slotElement) {
+            const details = slotElement.querySelectorAll('h3');
+            document.getElementById('modalDate').innerText = details[0].innerText;
+            document.getElementById('modalTime').innerText = details[1].innerText;
+            document.getElementById('modalDays').innerText = details[2].innerText;
+
+            document.getElementById('unblock-overlay').classList.remove('hidden');
+        } else {
+            console.error("DOM Element mapping failure: targets 'slot-" + slotId + "' not found.");
+        }
+    }
+
+    // 2. Hide confirmation overlay layout
+    function closeModal() {
+        document.getElementById('unblock-overlay').classList.add('hidden');
+        currentSlotId = null;
+    }
+
+    // 3. Post data downstream to unblock-slot endpoint
+    function executeUnblock() {
+        if (!currentSlotId) return;
+
+        // FIXED: Targeted right API endpoint route and structure payload correctly
+        fetch('/api/unblock-slot', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                slot_id: currentSlotId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            closeModal();
+
+            if (data.status === 'success') {
+                const slotToRemove = document.getElementById(`slot-${currentSlotId}`);
+                if (slotToRemove) {
+                    slotToRemove.remove();
+                }
+                
+                showSystemModal("Success", "The time slot has been successfully unblocked and is now available for student booking.");
+                checkEmptyState();
+            } else {
+                showSystemModal("Database Error", data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Fetch Network Pipeline Failure:", error);
+            closeModal();
+            showSystemModal("Network Error", "Failed to communicate with the database server.");
+        });
+    }
+
+    // 4. Verification checking layout list limits
+    function checkEmptyState() {
+        const container = document.getElementById('slots-container');
+        const emptyState = document.getElementById('empty-state');
+        const remainingSlots = container.getElementsByClassName('slot-item');
+        
+        if (remainingSlots.length === 0) {
+            if (!emptyState) {
+                const newEmptyState = document.createElement('div');
+                newEmptyState.id = 'empty-state';
+                newEmptyState.innerHTML = `<p class="empty-text">No Blocked Slot for this time</p>`;
+                container.appendChild(newEmptyState);
+            } else {
+                emptyState.classList.remove('hidden');
+                emptyState.style.display = 'block';
+            }
+        }
+    }
+
+    // 5. System notification controls
+    function showSystemModal(title, message) {
+        const modal = document.getElementById('system-notification-modal');
+        const titleEl = document.getElementById('system-modal-title');
+        const msgEl = document.getElementById('system-modal-message');
+        
+        if (modal && titleEl && msgEl) {
+            titleEl.innerText = title;
+            msgEl.innerText = message;
+            
+            if (title.toLowerCase().includes('error') || title.toLowerCase().includes('failed') || title.toLowerCase().includes('alert')) {
+                titleEl.classList.add('danger-title');
+            } else {
+                titleEl.classList.remove('danger-title');
+            }
+            
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeSystemModal() {
+        const modal = document.getElementById('system-notification-modal');
+        if (modal) {
+            modal.classList.add('hidden');
+        }
+    }
+</script>
+</body>
+</html>

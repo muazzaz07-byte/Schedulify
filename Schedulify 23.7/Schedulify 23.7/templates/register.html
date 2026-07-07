@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}?v=1.5">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        #password-requirements {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 10px;
+            font-size: 11px;
+            text-align: left;
+        }
+        .req { color: #6b7280; transition: color 0.2s ease; }
+        .req.valid { color: #2e7d32; font-weight: 500; } 
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .password-container input {
+            padding-right: 35px !important;
+            box-sizing: border-box;
+        }
+        
+        /* Memosisikan ikon mata tepat di tengah ruang input */
+        .toggle-password-eye {
+            position: absolute;
+            right: 5px;
+            top: 14px; 
+            cursor: pointer;
+            color: #64748b;
+            font-size: 0.95rem;
+            transition: color 0.2s ease;
+        }
+        
+        .toggle-password-eye:hover {
+            color: #004aad;
+        }
+    </style>
+</head>
+<body style="background-color: #e5e7eb; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; align-items: center !important; min-height: 100vh !important; height: auto !important; overflow-y: auto !important; padding: 50px 20px !important; margin: 0 !important;">
+
+    <div class="container" style="text-align: center; width: 100%; max-width: 400px; height: auto !important; display: block !important;">
+        
+        <h1 class="logo" style="margin-top: 10px; margin-bottom: 25px;">Schedulify</h1>
+        
+        <div class="card">
+            <h2>Create account</h2>
+            
+            {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                <div style="color: #e53e3e; background: #fff5f5; padding: 10px; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; border: 1px solid #feb2b2; font-weight: 500;">
+                  {% for message in messages %}
+                    {{ message }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('register') }}" method="POST">
+                
+                <div class="input-group">
+                    <input type="text" name="name" placeholder="Full Name" value="{{ name if name else '' }}" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" name="email" placeholder="Email" value="{{ email if email else '' }}" required>
+                </div>
+                
+                <div class="input-group">
+                    <div class="password-container">
+                        <input type="password" name="password" id="password" placeholder="Password" value="{{ password if password else '' }}" required oninput="validatePassword(this.value)">
+                        <i class="fa-solid fa-eye toggle-password-eye" id="togglePasswordIcon" onclick="togglePasswordVisibility()"></i>
+                    </div>
+                    
+                    <ul id="password-requirements">
+                        <li id="length" class="req">Minimum 8 characters</li>
+                        <li id="capital" class="req">At least 1 capital letter</li>
+                        <li id="number" class="req">At least 1 number</li>
+                        <li id="symbol" class="req">At least 1 symbol (@$!%*?&)</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label style="display: block; font-size: 12px; color: #6b7280; margin-bottom: 5px; text-align: left;">Security Question</label>
+                    <select class="select-style" name="security_question" required>
+                        <option value="" disabled {{ 'selected' if not security_q }}>Select a question</option>
+                        <option value="What is your pet's name?" {{ 'selected' if security_q == "What is your pet's name?" }}>What is your pet's name?</option>
+                        <option value="What is your mother's maiden name?" {{ 'selected' if security_q == "What is your mother's maiden name?" }}>What is your mother's maiden name?</option>
+                        <option value="What city were you born in?" {{ 'selected' if security_q == "What city were you born in?" }}>What city were you born in?</option>
+                    </select>
+                    <input type="text" name="security_answer" placeholder="Your answer" value="{{ security_a if security_a else '' }}" required style="margin-top: 15px;">
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 15px;">Sign up</button>
+            </form>
+
+            <p class="footer-text">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const pwdInput = document.getElementById('password');
+            if (pwdInput && pwdInput.value) {
+                validatePassword(pwdInput.value);
+            }
+        });
+
+        function validatePassword(val) {
+            document.getElementById('length').className = val.length >= 8 ? 'req valid' : 'req';
+            document.getElementById('capital').className = /[A-Z]/.test(val) ? 'req valid' : 'req';
+            document.getElementById('number').className = /\d/.test(val) ? 'req valid' : 'req';
+            document.getElementById('symbol').className = /[@$!%*?&]/.test(val) ? 'req valid' : 'req';
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('togglePasswordIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

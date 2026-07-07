@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedulify - Manage Appointment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='manage_lecturer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='navbar_lecturer.css') }}">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">Schedulify</div>
+    <nav class="nav-buttons">
+        <button class="{% if request.endpoint == 'manage' %}active{% endif %}" onclick="location.href='{{ url_for('manage') }}'">Manage Appointment</button>
+        <button class="{% if request.endpoint == 'block' %}active{% endif %}" onclick="location.href='{{ url_for('block') }}'">Block Slot</button>
+        <button class="{% if request.endpoint == 'manage_blocked' %}active{% endif %}" onclick="location.href='{{ url_for('manage_blocked') }}'">Manage Blocked Slot</button>
+        <button class="{% if request.endpoint == 'appointments' %}active{% endif %}" onclick="location.href='{{ url_for('appointments') }}'">My Appointment</button>
+        <button class="{% if request.endpoint == 'history' %}active{% endif %}" onclick="location.href='{{ url_for('history') }}'">Appointment History</button>
+        <button class="{% if request.endpoint == 'notifications_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('notifications_lecturer') }}'">Notification</button>
+        <button class="{% if request.endpoint == 'feedback_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('feedback_lecturer') }}'">Feedback</button>
+        <button class="{% if request.endpoint == 'profile_lecturer' %}active{% endif %}" onclick="location.href='{{ url_for('profile_lecturer') }}'">Profile</button>
+    </nav>
+</header>
+
+    <main class="container">
+        <section id="step-calendar" class="view">
+            <div class="lecturer-header-container">
+                <div class="lecturer-info">
+                    <h2>{{ user.name if user else 'Lecturer Name' }}</h2>
+                    <p>{{ user.office_location if user.office_location else 'No office signed' }}</p>
+                </div>
+            </div>
+
+            <div class="calendar-wrapper">
+                <button class="arrow-btn left btn-effect" onclick="changeWeek(-1)">&#9664;</button>
+                
+                <div class="calendar-card">
+                    <div class="calendar-header" id="calendar-days"></div>
+                    <div class="time-grid-container">
+                        <div class="time-grid" id="time-slots"></div>
+                    </div>
+                    <div class="scroll-indicator">
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                        <span class="arrow-down">&#9660;</span>
+                    </div>
+                </div>
+
+                <button class="arrow-btn right btn-effect" onclick="changeWeek(1)">&#9654;</button>
+            </div>
+        </section>
+
+        <div id="modal-cancel" class="modal hidden">
+            <div class="modal-content">
+                <h1 class="modal-title">Cancel This Appointment?</h1>
+                <p class="modal-subtitle">This action will notify the student. The student will receive an immediate notification regarding this change.</p>
+                
+                <div class="appointment-details">
+                    <p class="detail-label">You have appointment with</p>
+                    <h3 id="cancel-student-name" class="student-highlight"></h3>
+                    <p id="cancel-date" class="detail-text"></p>
+                    <p class="detail-text">📍 {{ user.office_location if user.office_location else 'Lecturer Room, Block A (Level 3)' }}</p>
+                    <p id="cancel-time" class="detail-text"></p>
+                </div>
+
+                <div class="modal-btns">
+                    <button class="btn-yes btn-effect" onclick="openReasonModal()">Yes</button>
+                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-reason" class="modal hidden">
+            <div class="modal-content">
+                <h1 class="modal-title">Reason for cancellation</h1>
+                
+                <div class="input-container">
+                    <textarea id="cancelReasonBox" placeholder="Type reason for cancelling this appointment..."></textarea>
+                </div>
+
+                <div class="modal-btns">
+                    <button class="btn-submit btn-effect" onclick="openChoiceModal()">Submit</button>
+                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-choice" class="modal hidden">
+            <div class="modal-content choice-modal-content">
+                <h1 class="modal-title">Appointment <span style="color: red;">Cancelled</span></h1>
+                <p class="modal-subtitle">The student has been notified. How would you like to set this slot now?</p>
+                
+                <div class="choice-container">
+                    <button class="choice-card btn-effect" onclick="openFinalConfirm('available')">
+                        <strong class="choice-title">Keep Available</strong>
+                        <span class="choice-desc">Allow other students to book this time.</span>
+                    </button>
+                    
+                    <button class="choice-card btn-effect" onclick="openFinalConfirm('blocked')">
+                        <strong class="choice-title">Block Slot</strong>
+                        <span class="choice-desc">Make this time unavailable for everyone.</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-final" class="modal hidden">
+            <div class="modal-content">
+                <h1>Confirmation Cancellation</h1>
+                <p style="margin: 30px 0;">Are you confident in your actions?</p>
+                <div class="modal-btns">
+                    <button class="btn-yes btn-effect" onclick="confirmCancellationAction()">Yes</button>
+                    <button class="btn-cancel btn-effect" onclick="closeAllModals()">No</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-success" class="modal hidden">
+            <div class="modal-content">
+                <h1 style="color: #004aad; font-size: 2.5rem;">Success!</h1>
+                <h2 style="margin: 20px 0; color: #334155;">Action completed successfully.</h2>
+                <button class="btn-yes btn-effect" onclick="closeAllModals()">Done</button>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-blocked-notice" class="modal hidden">
+    <div class="modal-content" style="text-align: center; padding: 30px;">
+        <div style="font-size: 3rem; color: #eab308; margin-bottom: 15px;">⚠️</div>
+        <h1 class="modal-title" style="color: #1e293b; margin-bottom: 10px;">Slot Blocked</h1>
+        <p class="modal-subtitle" style="color: #64748b; margin-bottom: 25px;">This calendar slot is currently locked and blocked by you!</p>
+        <button class="btn-yes btn-effect" onclick="closeAllModals()" style="background: #004aad; color: white; border: none; padding: 10px 35px; border-radius: 20px; font-weight: bold; cursor: pointer;">OK</button>
+    </div>
+</div>
+
+    <script src="{{ url_for('static', filename='manage_lecturer.js') }}"></script>
+</body>
+</html>
